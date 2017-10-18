@@ -33,6 +33,16 @@ public class GameServer{
                     System.err.println("Data received in unknown format");
                 }
             }while(!message.equals("bye"));
+
+            // Receive data
+            while (true) {
+                try {
+                    message = (String)in.readObject();
+                    System.out.println("client>" + message);
+                } catch (Exception e) {
+                    //System.err.println("Cannot receive a message, error: " + e.getMessage());
+                }
+            }
         }
         catch(IOException ioException){
             ioException.printStackTrace();

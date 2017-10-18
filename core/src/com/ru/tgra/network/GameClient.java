@@ -17,7 +17,7 @@ public class GameClient{
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();
             in = new ObjectInputStream(requestSocket.getInputStream());
-            //3: Communicating with the server
+            //3: Communicating with the server - Say Hello
             do{
                 try{
                     message = (String)in.readObject();
@@ -30,6 +30,18 @@ public class GameClient{
                     System.err.println("data received in unknown format");
                 }
             }while(!message.equals("bye"));
+
+            // Send data
+            int data = 1;
+            while (data < 30) {
+                try {
+                    sendMessage(Integer.toString(data));
+                    data++;
+                }
+                catch (Exception e) {
+                    System.err.println("Cannot send a message, error: " + e.getMessage());
+                }
+            }
         }
         catch(UnknownHostException unknownHost){
             System.err.println("You are trying to connect to an unknown host!");
