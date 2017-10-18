@@ -62,7 +62,7 @@ public class GameServer {
 			Socket socket = (Socket) i.next(); // get the socket for communicating with this client
 			ObjectOutputStream out = (ObjectOutputStream) j.next();
 			try {
-				out.writeObject(message); // send message to the client
+				out.writeObject(message.messageToString()); // send message to the client
 			} catch (Exception e) {
 				System.err.println("[system] could not send message to a client");
 				e.printStackTrace(System.err);
@@ -80,13 +80,13 @@ public class GameServer {
 			ObjectOutputStream out = j.next();
 			if (nick.equals(receiver)) {
 				success = true;
-				out.writeObject(msg_send);
+				out.writeObject(msg_send.messageToString());
 				break;
 			}
 		}
 		if (!success) {
 			Message err = new Message("system", msg_send.sender(), new Date(), "no client with nickname '" + msg_send.receiver() + "'");
-			sendPrivateMessage(err);
+			//sendPrivateMessage(err);
 		}
 	}
 
@@ -133,9 +133,12 @@ class GameServerConnector extends Thread {
 
 		Message init;
 		try {
-			init = (Message)in.readObject();
+			//init = (Message)in.readObject();
+			String nn = (String)in.readObject();
+			init = Message.stringToMessage(nn);
 			this.nickname = init.sender();
 			this.server.addNickname(init.sender());
+			System.out.println("Nickname: " + this.nickname);
 		} catch (Exception e) {
 			System.err.println("[system] there was a problem while reading your nickname");
 			e.printStackTrace(System.err);
@@ -146,7 +149,9 @@ class GameServerConnector extends Thread {
 		while (true) { // infinite loop in which this thread waits for incoming messages and processes them
 			Message msg_received;
 			try {
-				msg_received = (Message)in.readObject(); // read the message from the client
+				Object m = in.readObject(); // read the message from the client
+			    String msg = (String)m;
+				msg_received = Message.stringToMessage(msg);
 			} catch (Exception e) {
 				System.err.println("[system] there was a problem while reading message client on port " + this.socket.getPort());
 				e.printStackTrace(System.err);
@@ -157,7 +162,7 @@ class GameServerConnector extends Thread {
 			if (msg_received.text().length() == 0) // invalid message
 				continue;
 
-			System.out.println("[RKchat] [" + msg_received.sender() + "] : " + msg_received.text() + msg_received.time()); // print the incoming message in the console
+			System.out.println("[new data] [" + msg_received.sender() + "] : " + msg_received.text() + msg_received.time()); // print the incoming message in the console
 
 			Message msg_send = msg_received;
 			try {

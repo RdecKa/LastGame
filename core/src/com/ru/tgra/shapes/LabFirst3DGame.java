@@ -3,6 +3,7 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.ru.tgra.network.GameClient;
 
 import java.util.Random;
 
@@ -29,11 +30,19 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	Random rand;
 
+	GameClient client;
+
 	@Override
 	public void create () {
 		shader = new Shader3D();
 		Gdx.input.setInputProcessor(this);
 		GameEnv.init(shader);
+
+		try {
+			client = new GameClient();
+		} catch (Exception e) {
+			System.err.println("Cannot establish a network connection");
+		}
 
 		rand = new Random();
 
@@ -181,6 +190,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		maze.raiseWalls(deltaTime);
 		maze.incrementAngle(deltaTime * 50);
 		maze.changeObstacles(deltaTime / 30.0f);
+
+		client.sendToServer(player.position);
 	}
 	
 	private void display()
