@@ -58,7 +58,11 @@ public class GameServer {
 	public void sendToAllClients(Message message) throws Exception {
 		Iterator<Socket> i = clients.iterator();
 		Iterator<ObjectOutputStream> j = outi.iterator();
+		Iterator<String> k = nicknames.iterator();
 		while (i.hasNext()) { // iterate through the client list
+			if (((String) k.next()).equals(message.sender())) {
+				continue;
+			}
 			Socket socket = (Socket) i.next(); // get the socket for communicating with this client
 			ObjectOutputStream out = (ObjectOutputStream) j.next();
 			try {
@@ -166,7 +170,7 @@ class GameServerConnector extends Thread {
 
 			Message msg_send = msg_received;
 			try {
-				if (msg_send.receiver() == null || msg_send.receiver().equals("")) {
+				if (msg_send.receiver() == null || msg_send.receiver().equals("") || msg_send.receiver().equals("__server__")) {
 					this.server.sendToAllClients(msg_send); // send message to all clients
 				} else {
 					this.server.sendPrivateMessage(msg_send);

@@ -3,7 +3,7 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.ru.tgra.network.GameClient;
+import com.ru.tgra.network.*;
 
 import java.util.Random;
 
@@ -23,7 +23,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	boolean firstPersonView;
 	float fovProjection;
 
-	Player player, thirdPerson;
+	Player player, thirdPerson, opponent;
 
 	boolean win, winAnimation;
 	public static int level, numWallsAtOnce;
@@ -191,7 +191,17 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		maze.incrementAngle(deltaTime * 50);
 		maze.changeObstacles(deltaTime / 30.0f);
 
-		client.sendToServer(player.position);
+		client.sendToServer(player.position, player.direction);
+
+		PackageState p = client.getLastPackageState();
+		if (p != null) {
+			if (opponent == null) {
+				opponent = new Player(p.getPlayerPosition(), p.getPlayerDirection());
+			} else {
+				opponent.position = p.getPlayerPosition();
+				opponent.direction = p.getPlayerDirection();
+			}
+		}
 	}
 	
 	private void display()
@@ -223,6 +233,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		if (!firstPersonView)
 			player.draw(shader);
+
+		if (opponent != null)
+			opponent.draw(shader);
 
 		// Draw a map
 		int screenWidth = Gdx.graphics.getWidth();

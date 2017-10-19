@@ -1,6 +1,7 @@
 package com.ru.tgra.network;
 
 import com.ru.tgra.shapes.Point3D;
+import com.ru.tgra.shapes.Vector3D;
 
 import java.io.*;
 import java.net.*;
@@ -15,6 +16,7 @@ public class GameClient extends Thread
 	private ObjectOutputStream out = null;
 	private String nickname = "";
 	private Random rand = new Random();
+	private PackageState lastPackageState;
 
 	public static void main(String[] args) throws Exception {
 		new GameClient();
@@ -37,7 +39,7 @@ public class GameClient extends Thread
 			Message con = new Message(nickname, "__server__", new Date(), "init");
 			this.sendMessage(con, out);
 
-			GameClientMessageReceiver message_receiver = new GameClientMessageReceiver(in); // create a separate thread for listening to messages from the chat server
+			GameClientMessageReceiver message_receiver = new GameClientMessageReceiver(in, this); // create a separate thread for listening to messages from the chat server
 			message_receiver.start(); // run the new thread
 
 			System.out.println("[system] connected");
@@ -77,9 +79,12 @@ public class GameClient extends Thread
 		}
 	}
 
-	public void sendToServer(Point3D position) {
+	public void sendToServer(Point3D playerPosition, Vector3D playerDirection) {
 		// read from STDIN and send messages to the chat server
-		String userInput = position.toString();
+		//String userInput = position.toString();
+		PackageState p = new PackageState(playerPosition, playerDirection);
+		String userInput = p.toStringToSend();
+
 		String receiver = "__server__";
 		Date time;
 		String text = "";
@@ -106,23 +111,34 @@ public class GameClient extends Thread
 
 		this.sendMessage(message, out); // send the message to the server
 	}
+
+	public PackageState getLastPackageState() {
+		return this.lastPackageState;
+	}
+
+	public void setLastPackageState(PackageState lastPackageState) {
+		this.lastPackageState = lastPackageState;
+	}
 }
 
 // wait for messages from the chat server and print the out
 class GameClientMessageReceiver extends Thread {
 	private ObjectInputStream in;
+	private GameClient client;
 
-	public GameClientMessageReceiver(ObjectInputStream in) {
+	public GameClientMessageReceiver(ObjectInputStream in, GameClient client) {
 		this.in = in;
+		this.client = client;
 	}
 
 	public void run() {
 		try {
 			Message message;
-			String rawMessage; // = (String)this.in.readObject();
+			String rawMessage;
 			while ((rawMessage = (String)this.in.readObject()) != null) { // read new message
 				message = Message.stringToMessage(rawMessage);
 				System.out.println("[" + message.sender() + "] " + message.text() + message.time()); // print the message to the console
+				this.client.setLastPackageState(PackageState.stringToPackage(message.text()));
 			}
 		} catch (Exception e) {
 			System.err.println("[system] could not read message");

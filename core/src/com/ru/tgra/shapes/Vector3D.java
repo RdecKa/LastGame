@@ -91,4 +91,13 @@ public class Vector3D {
 	public String toString() {
 		return "(" + this.x + ", " + this.y + ", " + this.z + ")";
 	}
+
+	public String toStringToSend(String delimiter) {
+		return this.x + delimiter + this.y + delimiter + this.z;
+	}
+
+	public static Vector3D stringToVector(String str, String delimiter) {
+		String[] comp = str.split(delimiter);
+		return new Vector3D(Float.parseFloat(comp[0]), Float.parseFloat(comp[1]), Float.parseFloat(comp[2]));
+	}
 }

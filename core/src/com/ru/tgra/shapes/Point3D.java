@@ -1,5 +1,7 @@
 package com.ru.tgra.shapes;
 
+import java.nio.FloatBuffer;
+
 public class Point3D {
 
 	public float x;
@@ -50,5 +52,14 @@ public class Point3D {
 	@Override
 	public String toString() {
 		return "(" + this.x + ", " + this.y + ", " + this.z + ")";
+	}
+
+	public String toStringToSend(String delimiter) {
+		return this.x + delimiter + this.y + delimiter + this.z;
+	}
+
+	public static Point3D stringToPoint(String str, String delimiter) {
+		String[] comp = str.split(delimiter);
+		return new Point3D(Float.parseFloat(comp[0]), Float.parseFloat(comp[1]), Float.parseFloat(comp[2]));
 	}
 }
