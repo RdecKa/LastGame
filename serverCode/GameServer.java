@@ -5,9 +5,7 @@ import java.util.*;
 public class GameServer {
 
 	protected int serverPort = 1234;
-	protected List<Socket> clients = new ArrayList<Socket>(); // list of clients
-	protected List<ObjectOutputStream> outi = new ArrayList<ObjectOutputStream>();
-	protected List<String> nicknames = new ArrayList<String>();
+	protected List<User> users = new ArrayList<User>();
 
 	public static void main(String[] args) throws Exception {
 		new GameServer();
@@ -31,11 +29,9 @@ public class GameServer {
 			while (true) {
 				Socket newClientSocket = serverSocket.accept(); // wait for a new client connection
 				ObjectOutputStream out = new ObjectOutputStream(newClientSocket.getOutputStream());
-				synchronized(this) {
-					clients.add(newClientSocket); // add client to the list of clients
-					outi.add(out);
-				}
-				GameServerConnector conn = new GameServerConnector(this, newClientSocket, out); // create a new thread for communication with the new client
+				User newUser = new User(newClientSocket, out);
+				this.users.add(newUser);
+				GameServerConnector conn = new GameServerConnector(this, newUser); // create a new thread for communication with the new client
 				conn.start(); // run the new thread
 			}
 		} catch (Exception e) {
@@ -56,15 +52,15 @@ public class GameServer {
 
 	// send a message to all clients connected to the server
 	public void sendToAllClients(Message message) throws Exception {
-		Iterator<Socket> i = clients.iterator();
-		Iterator<ObjectOutputStream> j = outi.iterator();
-		Iterator<String> k = nicknames.iterator();
-		while (i.hasNext()) { // iterate through the client list
-			if (((String) k.next()).equals(message.sender())) {
+		Iterator<User> u = this.users.iterator();
+		while (u.hasNext()) { // iterate through the client list
+			User user = u.next();
+			String nick = user.getNickname();
+			if (nick.equals(message.sender())) {
 				continue;
 			}
-			Socket socket = (Socket) i.next(); // get the socket for communicating with this client
-			ObjectOutputStream out = (ObjectOutputStream) j.next();
+			Socket socket = user.getSocket(); // get the socket for communicating with this client
+			ObjectOutputStream out = user.getOutputStream();
 			try {
 				out.writeObject(message.messageToString()); // send message to the client
 			} catch (Exception e) {
@@ -76,12 +72,12 @@ public class GameServer {
 
 	public void sendPrivateMessage(Message msg_send) throws Exception {
 		String receiver = msg_send.receiver();
-		Iterator<String> i = nicknames.iterator();
-		Iterator<ObjectOutputStream> j = outi.iterator();
+		Iterator<User> u = this.users.iterator();
 		boolean success = false;
-		while (i.hasNext()) {
-			String nick = (String) i.next();
-			ObjectOutputStream out = j.next();
+		while (u.hasNext()) {
+			User user = u.next();
+			String nick = user.getNickname();
+			ObjectOutputStream out = user.getOutputStream();
 			if (nick.equals(receiver)) {
 				success = true;
 				out.writeObject(msg_send.messageToString());
@@ -94,44 +90,36 @@ public class GameServer {
 		}
 	}
 
-	public void removeClient(Socket socket, ObjectOutputStream out, String nickname) {
-		synchronized(this) {
-			clients.remove(socket);
-			outi.remove(out);
-			nicknames.remove(nickname);
-		}
+	public void removeClient(User user) {
+		users.remove(user);
 	}
 
-	public void addNickname(String nickname) {
-		synchronized(this) {
-			nicknames.add(nickname);
-		}
+	public void addNickname(User user, String nickname) {
+		user.setNickname(nickname);
+		System.out.println("set: " + nickname);
 	}
 }
 
 class GameServerConnector extends Thread {
 	private GameServer server;
-	private Socket socket;
-	private ObjectOutputStream out;
-	private String nickname;
+	private User user;
 
-	public GameServerConnector(GameServer server, Socket socket, ObjectOutputStream out) {
+	public GameServerConnector(GameServer server, User user) {
 		this.server = server;
-		this.socket = socket;
-		this.out = out;
-		this.nickname = "";
+		this.user = user;
 	}
 
 	public void run() {
-		System.out.println("[system] connected with " + this.socket.getInetAddress().getHostName() + ":" + this.socket.getPort());
+		Socket socket = this.user.getSocket();
+		System.out.println("[system] connected with " + socket.getInetAddress().getHostName() + ":" + socket.getPort());
 
 		ObjectInputStream in;
 		try {
-			in = new ObjectInputStream(this.socket.getInputStream()); // create input stream for listening for incoming messages
+			in = new ObjectInputStream(socket.getInputStream()); // create input stream for listening for incoming messages
 		} catch (IOException e) {
 			System.err.println("[system] could not open input stream!");
 			e.printStackTrace(System.err);
-			this.server.removeClient(socket, out, nickname);
+			this.server.removeClient(this.user);
 			return;
 		}
 
@@ -140,13 +128,11 @@ class GameServerConnector extends Thread {
 			//init = (Message)in.readObject();
 			String nn = (String)in.readObject();
 			init = Message.stringToMessage(nn);
-			this.nickname = init.sender();
-			this.server.addNickname(init.sender());
-			System.out.println("Nickname: " + this.nickname);
+			this.user.setNickname(init.sender());
 		} catch (Exception e) {
 			System.err.println("[system] there was a problem while reading your nickname");
 			e.printStackTrace(System.err);
-			this.server.removeClient(this.socket, this.out, this.nickname);
+			this.server.removeClient(this.user);
 			return;
 		}
 
@@ -157,9 +143,9 @@ class GameServerConnector extends Thread {
 			    String msg = (String)m;
 				msg_received = Message.stringToMessage(msg);
 			} catch (Exception e) {
-				System.err.println("[system] there was a problem while reading message client on port " + this.socket.getPort());
+				System.err.println("[system] there was a problem while reading message client on port " + socket.getPort());
 				e.printStackTrace(System.err);
-				this.server.removeClient(this.socket, this.out, this.nickname);
+				this.server.removeClient(this.user);
 				return;
 			}
 
@@ -181,5 +167,37 @@ class GameServerConnector extends Thread {
 				continue;
 			}
 		}
+	}
+}
+
+class User {
+	protected Socket socket;
+	protected ObjectOutputStream outstream;
+	protected String nickname;
+
+	public User(Socket socket, ObjectOutputStream outstream) {
+		this.socket = socket;
+		this.outstream = outstream;
+		this.nickname = "";
+	}
+
+	public void addNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Socket getSocket() {
+		return this.socket;
+	}
+	
+	public ObjectOutputStream getOutputStream() {
+		return this.outstream;
+	}
+
+	public String getNickname() {
+		return this.nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 }

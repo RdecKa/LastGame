@@ -105,6 +105,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		lightPos1 = new Point3D(mazeWidth - 0.5f, 1, mazeDepth - 0.5f);
 		lightCol1 = new Color(1, 1, 1, 1);
+
+		//client.sendToServer(player.position, player.direction);
 	}
 
 	private void input(float deltaTime)
