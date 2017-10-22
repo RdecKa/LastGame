@@ -30,7 +30,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	Random rand;
 
-	GameClient client;
+	public GameClient client;
 
 	@Override
 	public void create () {
@@ -54,32 +54,26 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		switch (level) {
 			case 1: {
 				mazeWidth = 5;
-				mazeDepth = 4;
-				numWallsAtOnce = 1;
 				break;
 			}
 			case 2: {
 				mazeWidth = 7;
-				mazeDepth = 9;
-				numWallsAtOnce = 2;
 				break;
 			}
 			case 3: {
 				mazeWidth = 10;
-				mazeDepth = 8;
-				numWallsAtOnce = 3;
 				break;
 			}
 			default: {
 				mazeWidth = 10 + rand.nextInt(5);
-				mazeDepth = 10 + rand.nextInt(5);
-				numWallsAtOnce = 3 + rand.nextInt(3);
 			}
 		}
+		mazeDepth = mazeWidth;
+		numWallsAtOnce = 1;
 
 		maze = new Maze(mazeWidth, mazeDepth);
 
-		player = new Player(new Point3D(0.5f, 0.8f, 0.5f), new Vector3D(1, 0, 1));
+		player = new Player(new Point3D(mazeWidth - 0.5f, 0.8f, 0.5f), new Vector3D(-1, 0, 1));
 
 		win = false;
 		winAnimation = false;

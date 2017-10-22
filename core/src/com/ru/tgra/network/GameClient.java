@@ -138,7 +138,9 @@ class GameClientMessageReceiver extends Thread {
 			while ((rawMessage = (String)this.in.readObject()) != null) { // read new message
 				message = Message.stringToMessage(rawMessage);
 				System.out.println("[" + message.sender() + "] " + message.text() + message.time()); // print the message to the console
-				this.client.setLastPackageState(PackageState.stringToPackage(message.text()));
+				PackageState p = PackageState.stringToPackage(message.text());
+				p.reflectView();
+				this.client.setLastPackageState(p);
 			}
 		} catch (Exception e) {
 			System.err.println("[system] could not read message");

@@ -29,4 +29,17 @@ public class PackageState {
 		String[] components = str.split(delimiter);
 		return new PackageState(Point3D.stringToPoint(components[0], delimArg), Vector3D.stringToVector(components[1], delimArg));
 	}
+
+	public void reflectView() {
+		System.out.println("Old " + this.playerPosition);
+		float playerX = this.playerPosition.x;
+		float playerZ = this.playerPosition.z;
+		this.playerPosition.x = playerZ;
+		this.playerPosition.z = playerX;
+		System.out.println("New " + this.playerPosition);
+		float directionX = this.playerDirection.x;
+		float directionZ = this.playerDirection.z;
+		this.playerDirection.x = directionZ;
+		this.playerDirection.z = directionX;
+	}
 }
