@@ -112,20 +112,22 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private void input(float deltaTime)
 	{
 		if (firstPersonView) {
-			moveFor = new Vector3D(0, 0, 0);
-			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-				moveFor.add(moveLeft);
+			if (opponent != null) {
+				moveFor = new Vector3D(0, 0, 0);
+				if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+					moveFor.add(moveLeft);
+				}
+				if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+					moveFor.add(moveLeft.returnScaled(-1));
+				}
+				if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+					moveFor.add(moveForward);
+				}
+				if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+					moveFor.add(moveForward.returnScaled(-1));
+				}
+				moveFor.scale(deltaTime);
 			}
-			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-				moveFor.add(moveLeft.returnScaled(-1));
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-				moveFor.add(moveForward);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-				moveFor.add(moveForward.returnScaled(-1));
-			}
-			moveFor.scale(deltaTime);
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				player.direction.rotateXZ(-100 * deltaTime);
 			}
