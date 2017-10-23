@@ -30,7 +30,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	Random rand;
 
-	public GameClient client;
+	public static GameClient client;
 
 	@Override
 	public void create () {
@@ -199,6 +199,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				opponent.position = p.getPlayerPosition();
 				opponent.direction = p.getPlayerDirection();
 			}
+		}
+		PackageState pWall = client.getWallPackage();
+		if (pWall != null) {
+			this.maze.addWall(pWall.getWall());
 		}
 	}
 	

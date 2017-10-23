@@ -1,11 +1,12 @@
 package com.ru.tgra.network;
 
-import com.ru.tgra.shapes.Point3D;
-import com.ru.tgra.shapes.Vector3D;
+import com.ru.tgra.shapes.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class GameClient extends Thread
@@ -17,6 +18,7 @@ public class GameClient extends Thread
 	private String nickname = "";
 	private Random rand = new Random();
 	private PackageState lastPackageState;
+	private List<PackageState> wallPackets = new ArrayList<PackageState>();
 
 	public static void main(String[] args) throws Exception {
 		new GameClient();
@@ -83,8 +85,16 @@ public class GameClient extends Thread
 		// read from STDIN and send messages to the chat server
 		//String userInput = position.toString();
 		PackageState p = new PackageState(playerPosition, playerDirection);
-		String userInput = p.toStringToSend();
+		sendPackage(p);
+	}
 
+	public void sendToServer(Wall wall) {
+		PackageState p = new PackageState(wall);
+		sendPackage(p);
+	}
+
+	public void sendPackage(PackageState p) {
+		String userInput = p.toStringToSend();
 		String receiver = "__server__";
 		Date time;
 		String text = "";
@@ -119,6 +129,20 @@ public class GameClient extends Thread
 	public void setLastPackageState(PackageState lastPackageState) {
 		this.lastPackageState = lastPackageState;
 	}
+
+	public void addWallPackage(PackageState wallPackage) {
+		this.wallPackets.add(wallPackage);
+	}
+
+	public PackageState getWallPackage() {
+		if (this.wallPackets.size() > 0) {
+			PackageState pac = this.wallPackets.get(0);
+			this.wallPackets.remove(0);
+			return pac;
+		} else {
+			return null;
+		}
+	}
 }
 
 // wait for messages from the chat server and print the out
@@ -137,10 +161,13 @@ class GameClientMessageReceiver extends Thread {
 			String rawMessage;
 			while ((rawMessage = (String)this.in.readObject()) != null) { // read new message
 				message = Message.stringToMessage(rawMessage);
-				System.out.println("[" + message.sender() + "] " + message.text() + message.time()); // print the message to the console
+				//System.out.println("[" + message.sender() + "] " + message.text() + message.time()); // print the message to the console
 				PackageState p = PackageState.stringToPackage(message.text());
 				p.reflectView();
-				this.client.setLastPackageState(p);
+				if (p.getType().equals("position"))
+					this.client.setLastPackageState(p);
+				else if (p.getType().equals("newwall"))
+					this.client.addWallPackage(p);
 			}
 		} catch (Exception e) {
 			System.err.println("[system] could not read message");

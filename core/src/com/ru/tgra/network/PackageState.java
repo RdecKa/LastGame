@@ -3,15 +3,25 @@ package com.ru.tgra.network;
 import com.ru.tgra.shapes.*;
 
 public class PackageState {
-	private Point3D playerPosition;
-	private Vector3D playerDirection;
 	private static String delimiter = "kkk";
 	private static String delimArg = "jjj";
+	private String type;
+	private Point3D playerPosition;
+	private Vector3D playerDirection;
+	private Wall wall;
 
 	public PackageState(Point3D playerPosition, Vector3D playerDirection) {
 		this.playerPosition = playerPosition;
 		this.playerDirection = playerDirection;
+		this.type = "position";
 	}
+
+	public PackageState(Wall wall) {
+		this.wall = wall;
+		this.type = "newwall";
+	}
+
+	public String getType() { return type; }
 
 	public Point3D getPlayerPosition() {
 		return playerPosition;
@@ -21,25 +31,39 @@ public class PackageState {
 		return playerDirection;
 	}
 
+	public Wall getWall() { return wall; }
+
 	public String toStringToSend() {
-		return this.playerPosition.toStringToSend(delimArg) + delimiter + this.playerDirection.toStringToSend(delimArg);
+		if (this.type.equals("position"))
+			return this.type + delimiter + this.playerPosition.toStringToSend(delimArg) + delimiter + this.playerDirection.toStringToSend(delimArg);
+		else if (this.type.equals("newwall"))
+			return this.type + delimiter + this.wall.toStringToSend(delimArg);
+		else
+			return null;
 	}
 
 	public static PackageState stringToPackage(String str) {
 		String[] components = str.split(delimiter);
-		return new PackageState(Point3D.stringToPoint(components[0], delimArg), Vector3D.stringToVector(components[1], delimArg));
+		if (components[0].equals("position"))
+			return new PackageState(Point3D.stringToPoint(components[1], delimArg), Vector3D.stringToVector(components[2], delimArg));
+		else if (components[0].equals("newwall"))
+			return new PackageState(Wall.stringToWall(components[1], delimArg));
+		else
+			return null;
 	}
 
 	public void reflectView() {
-		System.out.println("Old " + this.playerPosition);
-		float playerX = this.playerPosition.x;
-		float playerZ = this.playerPosition.z;
-		this.playerPosition.x = playerZ;
-		this.playerPosition.z = playerX;
-		System.out.println("New " + this.playerPosition);
-		float directionX = this.playerDirection.x;
-		float directionZ = this.playerDirection.z;
-		this.playerDirection.x = directionZ;
-		this.playerDirection.z = directionX;
+		if (this.type.equals("position")) {
+			float playerX = this.playerPosition.x;
+			float playerZ = this.playerPosition.z;
+			this.playerPosition.x = playerZ;
+			this.playerPosition.z = playerX;
+			float directionX = this.playerDirection.x;
+			float directionZ = this.playerDirection.z;
+			this.playerDirection.x = directionZ;
+			this.playerDirection.z = directionX;
+		} else if (this.type.equals("newwall")) {
+			this.wall.reflect();
+		}
 	}
 }

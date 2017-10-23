@@ -143,6 +143,7 @@ public class Maze {
 		}
 		if (newWall != null)
 			this.innerWallsToBe.add(newWall);
+			LabFirst3DGame.client.sendToServer(newWall);
 	}
 
 	private boolean isAllowed(int x, int z, int[][] forbidden) {
@@ -156,6 +157,11 @@ public class Maze {
 	public void addRandomWalls(int n, int curX, int curZ) {
 		for (int i = 0; i < n; i++)
 			this.addRandomWall(curX, curZ);
+	}
+
+	public void addWall(Wall wall) {
+		this.innerWallsToBe.add(wall);
+		System.out.println("Adding wall: " + wall.toStringToSend("..."));
 	}
 
 	public void raiseWalls(float raiseFor) {
@@ -276,42 +282,5 @@ class Cell {
 
 	public boolean hasEastWall() {
 		return eastWall;
-	}
-}
-
-class Wall {
-	private float wallWidth, wallLength, wallHeight;
-	private boolean parallelToX;
-	private float centerX, centerZ; // Central point of the wall
-
-	public Wall(float width, float length, boolean parallelToX, float centerX, float centerZ) {
-		this.wallWidth = width;
-		this.wallLength = length;
-		this.wallHeight = 0;
-		this.parallelToX = parallelToX;
-		this.centerX = centerX;
-		this.centerZ = centerZ;
-	}
-
-	public void draw(int unit, Shader3D shader) {
-		ModelMatrix.main.loadIdentityMatrix();
-		ModelMatrix.main.addTranslation(this.centerX * unit, (this.wallHeight / 2 + 0.05f) * unit, this.centerZ * unit);
-		if (this.parallelToX) {
-			ModelMatrix.main.addScale(this.wallLength * unit, this.wallHeight * unit, this.wallWidth);
-		} else {
-			ModelMatrix.main.addScale(this.wallWidth * unit, this.wallHeight * unit, this.wallLength);
-		}
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube();
-	}
-
-	// Returns true if the wall has height 1 (it cannot be higher)
-	public boolean raiseWall(float raiseFor) {
-		this.wallHeight += raiseFor;
-		if (this.wallHeight > 1) {
-			this.wallHeight = 1;
-			return true;
-		}
-		return false;
 	}
 }
