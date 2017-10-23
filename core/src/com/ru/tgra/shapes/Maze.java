@@ -9,7 +9,7 @@ public class Maze {
 	private int unit;
 	private Color wallColor;
 	private Vector<Wall> innerWalls, innerWallsToBe;
-	private static Random rand = new Random();
+	private static Random rand = new Random(), randWall = new Random(557);
 	private float wallWidth;
 	private float goalBoxAngle;
 	private float goalBoxSize;
@@ -34,16 +34,9 @@ public class Maze {
 		this.goalBoxSize = 0.4f;
 		this.goalColor = new Color(1, 0, 0, 1);
 		this.obstacles = new Vector<Obstacle>();
-		for (int i = 0; i < this.mazeWidth; i++) {
-			int x = rand.nextInt(this.mazeWidth);
-			int y = rand.nextInt(this.mazeDepth);
-			if (x == 0 && y == 0) {
-				x = 1;
-			} else if (x == mazeWidth - 1 && y == mazeDepth - 1) {
-				y = 1;
-			}
-			Point3D newPosition = new Point3D( x + 0.5f, 0.8f, y + 0.5f);
-			obstacles.add(new Obstacle(newPosition, rand.nextFloat() / 4f + 0.1f,
+		for (int i = 0; i < this.mazeWidth - 1; i++) {
+			Point3D newPosition = new Point3D( i + 0.5f, 0.8f, i + 0.5f);
+			obstacles.add(new Obstacle(newPosition, randWall.nextFloat() / 4f + 0.1f,
 					new Color(0.5f, 0.8f, 0.7f, 1)));
 		}
 	}
@@ -161,7 +154,6 @@ public class Maze {
 
 	public void addWall(Wall wall) {
 		this.innerWallsToBe.add(wall);
-		System.out.println("Adding wall: " + wall.toStringToSend("..."));
 	}
 
 	public void raiseWalls(float raiseFor) {

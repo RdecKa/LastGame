@@ -187,7 +187,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		}
 		maze.raiseWalls(deltaTime);
 		maze.incrementAngle(deltaTime * 50);
-		maze.changeObstacles(deltaTime / 30.0f);
+		if (opponent != null)
+			maze.changeObstacles(deltaTime / 30.0f);
 
 		client.sendToServer(player.position, player.direction);
 
