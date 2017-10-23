@@ -72,7 +72,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				break;
 			}
 			default: {
-				mazeWidth = 10 + rand.nextInt(5);
+				mazeWidth = 11 + (level % 4);
 			}
 		}
 		mazeDepth = mazeWidth;
@@ -163,6 +163,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			firstPersonView = !firstPersonView;
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+			client.announceVictory(false);
 			initLevel(level);
 		}
 	}
@@ -175,7 +176,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			return;
 		} else if (win) {
 			pointsInd.addPoint(true);
-			client.announceVictory();
+			client.announceVictory(true);
 			initLevel(++level);
 		}
 
@@ -215,11 +216,16 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (pWall != null) {
 			this.maze.addWall(pWall.getWall());
 		}
-		defeat = client.isDefeat();
-		if (defeat) {
-			pointsInd.addPoint(false);
-			level ++;
-			initLevel(level);
+		PackageState pDefeat = client.getDefeat();
+		if (pDefeat != null) {
+			if (pDefeat.isDefeated()) {
+				pointsInd.addPoint(false);
+				level++;
+				initLevel(level);
+			} else {
+				initLevel(level);
+			}
+			defeat = true;
 			return;
 		}
 	}

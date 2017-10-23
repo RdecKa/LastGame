@@ -19,7 +19,7 @@ public class GameClient extends Thread
 	private Random rand = new Random();
 	private PackageState lastPackageState;
 	private List<PackageState> wallPackets = new ArrayList<PackageState>();
-	private boolean defeat = false;
+	private PackageState defeat;
 
 	public static void main(String[] args) throws Exception {
 		new GameClient();
@@ -94,8 +94,8 @@ public class GameClient extends Thread
 		sendPackage(p);
 	}
 
-	public void announceVictory() {
-		PackageState p = new PackageState();
+	public void announceVictory(boolean win) {
+		PackageState p = new PackageState(win);
 		sendPackage(p);
 	}
 
@@ -150,16 +150,14 @@ public class GameClient extends Thread
 		}
 	}
 
-	public void setDefeat() {
-		this.defeat = true;
+	public void setDefeat(PackageState p) {
+		this.defeat = p;
 	}
 
-	public boolean isDefeat() {
-		if (this.defeat) {
-			this.defeat = false;
-			return true;
-		}
-		return false;
+	public PackageState getDefeat() {
+		PackageState tmp = this.defeat;
+		this.defeat = null;
+		return tmp;
 	}
 }
 
@@ -187,7 +185,7 @@ class GameClientMessageReceiver extends Thread {
 				else if (p.getType().equals("newwall"))
 					this.client.addWallPackage(p);
 				else  if (p.getType().equals("defeat")) {
-					this.client.setDefeat();
+					this.client.setDefeat(p);
 				}
 			}
 		} catch (Exception e) {

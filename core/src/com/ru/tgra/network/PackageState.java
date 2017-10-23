@@ -9,6 +9,7 @@ public class PackageState {
 	private Point3D playerPosition;
 	private Vector3D playerDirection;
 	private Wall wall;
+	private boolean win;
 
 	public PackageState(Point3D playerPosition, Vector3D playerDirection) {
 		this.playerPosition = playerPosition;
@@ -21,8 +22,9 @@ public class PackageState {
 		this.type = "newwall";
 	}
 
-	public PackageState() {
+	public PackageState(boolean win) {
 		this.type = "defeat";
+		this.win = win;
 	}
 
 	public String getType() { return type; }
@@ -31,11 +33,11 @@ public class PackageState {
 		return playerPosition;
 	}
 
-	public Vector3D getPlayerDirection() {
-		return playerDirection;
-	}
+	public Vector3D getPlayerDirection() { return playerDirection;	}
 
 	public Wall getWall() { return wall; }
+
+	public boolean isDefeated() { return win; }
 
 	public String toStringToSend() {
 		if (this.type.equals("position"))
@@ -43,7 +45,7 @@ public class PackageState {
 		else if (this.type.equals("newwall"))
 			return this.type + delimiter + this.wall.toStringToSend(delimArg);
 		else if (this.type.equals("defeat"))
-			return this.type;
+			return this.type + delimiter + this.win;
 		else
 			return null;
 	}
@@ -55,7 +57,7 @@ public class PackageState {
 		else if (components[0].equals("newwall"))
 			return new PackageState(Wall.stringToWall(components[1], delimArg));
 		else if (components[0].equals("defeat"))
-			return new PackageState();
+			return new PackageState(Boolean.parseBoolean(components[1]));
 		else
 			return null;
 	}
