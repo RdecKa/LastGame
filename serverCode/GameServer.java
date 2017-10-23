@@ -28,11 +28,13 @@ public class GameServer {
 		try {
 			while (true) {
 				Socket newClientSocket = serverSocket.accept(); // wait for a new client connection
-				ObjectOutputStream out = new ObjectOutputStream(newClientSocket.getOutputStream());
-				User newUser = new User(newClientSocket, out);
-				this.users.add(newUser);
-				GameServerConnector conn = new GameServerConnector(this, newUser); // create a new thread for communication with the new client
-				conn.start(); // run the new thread
+				if (this.users.size() < 2) {
+					ObjectOutputStream out = new ObjectOutputStream(newClientSocket.getOutputStream());
+					User newUser = new User(newClientSocket, out);
+					this.users.add(newUser);
+					GameServerConnector conn = new GameServerConnector(this, newUser); // create a new thread for communication with the new client
+					conn.start(); // run the new thread
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("[error] Accept failed.");
@@ -119,7 +121,6 @@ class GameServerConnector extends Thread {
 		} catch (IOException e) {
 			System.err.println("[system] could not open input stream!");
 			e.printStackTrace(System.err);
-			this.server.removeClient(this.user);
 			return;
 		}
 
