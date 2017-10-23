@@ -5,13 +5,14 @@ import java.util.Vector;
 public class Player {
 	public Point3D position;
 	public Vector3D direction;
-	private Color color;
+	private Color color, headColor;
 	private float radius;
 
-	public Player(Point3D startPosition, Vector3D startDirection) {
+	public Player(Point3D startPosition, Vector3D startDirection, Color headColor) {
 		this.position = startPosition;
 		this.direction = startDirection;
 		this.color = new Color(0, 0, 0, 1);
+		this.headColor = headColor;
 		this.radius = 0.4f;
 	}
 
@@ -26,7 +27,7 @@ public class Player {
 		SphereGraphic.drawSolidSphere();
 
 		// Draw head
-		shader.setMaterialDiffuse(new Color(0.3f, 0.9f, 0.3f, 1));
+		shader.setMaterialDiffuse(headColor);
 		Point3D headPos = this.position.clone();
 		headPos.add(this.direction.returnScaled(0.15f));
 		headPos.y -= this.radius * 1.2f;
@@ -110,7 +111,7 @@ public class Player {
 
 class ThirdPerson extends Player {
 	public ThirdPerson(Point3D startPosition, Vector3D startDirection) {
-		super(startPosition, startDirection);
+		super(startPosition, startDirection, new Color(0, 0, 0, 0));
 	}
 
 	public static ThirdPerson createThirdPerson(Point3D startPosition, Point3D center) {

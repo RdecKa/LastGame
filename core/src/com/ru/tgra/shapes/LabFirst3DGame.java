@@ -73,7 +73,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		maze = new Maze(mazeWidth, mazeDepth);
 
-		player = new Player(new Point3D(mazeWidth - 0.5f, 0.8f, 0.5f), new Vector3D(-1, 0, 1));
+		player = new Player(new Point3D(mazeWidth - 0.5f, 0.8f, 0.5f), new Vector3D(-1, 0, 1), new Color(0.8f, 0.8f, 0.2f, 1));
 
 		win = false;
 		winAnimation = false;
@@ -195,7 +195,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		PackageState p = client.getLastPackageState();
 		if (p != null) {
 			if (opponent == null) {
-				opponent = new Player(p.getPlayerPosition(), p.getPlayerDirection());
+				opponent = new Player(p.getPlayerPosition(), p.getPlayerDirection(), new Color(0.3f, 0.9f, 0.3f, 1));
 			} else {
 				opponent.position = p.getPlayerPosition();
 				opponent.direction = p.getPlayerDirection();
