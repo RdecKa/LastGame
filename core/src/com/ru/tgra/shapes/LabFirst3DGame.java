@@ -24,6 +24,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	float fovProjection;
 
 	Player player, thirdPerson, opponent;
+	Color playerColor, opponentColor;
 
 	boolean win, winAnimation;
 	public static int level, numWallsAtOnce;
@@ -31,6 +32,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	Random rand;
 
 	public static GameClient client;
+
+	PointsIndicator pointsInd;
 
 	@Override
 	public void create () {
@@ -43,6 +46,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		} catch (Exception e) {
 			System.err.println("Cannot establish a network connection");
 		}
+
+		playerColor = new Color(0.8f, 0.8f, 0.2f, 1);
+		opponentColor = new Color(0.3f, 0.9f, 0.3f, 1);
+		pointsInd = new PointsIndicator(playerColor, opponentColor);
 
 		rand = new Random();
 
@@ -73,7 +80,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		maze = new Maze(mazeWidth, mazeDepth);
 
-		player = new Player(new Point3D(mazeWidth - 0.5f, 0.8f, 0.5f), new Vector3D(-1, 0, 1), new Color(0.8f, 0.8f, 0.2f, 1));
+		player = new Player(new Point3D(mazeWidth - 0.5f, 0.8f, 0.5f), new Vector3D(-1, 0, 1), playerColor);
 
 		win = false;
 		winAnimation = false;
@@ -93,7 +100,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		mapCenter = mapCameraEye.clone().returnAddedVector(new Vector3D(0, -5, 0));
 		Point3D mapCameraCenter = mapCenter;
 		ortCamera = new OrtographicCamera();
-		ortCamera.Look3D(mapCameraEye, mapCameraCenter, new Vector3D(0,0,1));
+		ortCamera.Look3D(new Point3D(0, 0, -1), new Point3D(0, 0, 0), new Vector3D(0,1, 0));
 
 		thirdPerson = ThirdPerson.createThirdPerson(mapCameraCenter.returnAddedVector(new Vector3D(-10, 10, 0)), mapCameraCenter);
 
@@ -195,7 +202,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		PackageState p = client.getLastPackageState();
 		if (p != null) {
 			if (opponent == null) {
-				opponent = new Player(p.getPlayerPosition(), p.getPlayerDirection(), new Color(0.3f, 0.9f, 0.3f, 1));
+				opponent = new Player(p.getPlayerPosition(), p.getPlayerDirection(), opponentColor);
 			} else {
 				opponent.position = p.getPlayerPosition();
 				opponent.direction = p.getPlayerDirection();
@@ -240,28 +247,31 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (opponent != null)
 			opponent.draw(shader);
 
-		// Draw a map
+		// Draw indicator
 		int screenWidth = Gdx.graphics.getWidth();
 		int screenHeight = Gdx.graphics.getHeight();
-		int mapWidth = mazeWidth * 10;
-		int mapHeight = mazeDepth * 10;
+		int mapWidth = screenWidth;
+		int mapHeight = screenHeight / 30;
 		int margin = 10;
-		Gdx.gl20.glViewport(screenWidth - mapWidth - margin, screenHeight - mapHeight - margin, mapWidth, mapHeight);
+		//System.out.println((screenWidth - mapWidth - margin) + " " + (screenHeight - mapHeight - margin) + " " + mapWidth + " " + mapHeight);
+		Gdx.gl20.glViewport(0, screenHeight - mapHeight - margin, mapWidth, mapHeight);
 
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 
 		shader.setLightDirColor(new Color(0, 0, 0, 1));
 		shader.setLightPosColor(new Color(0, 0, 0, 1));
 
-		ortCamera.setOrtographicProjection(-mazeWidth * 0.5f, mazeWidth * 0.5f, -mazeDepth * 0.5f, mazeDepth * 0.5f, 1, 10);
+		ortCamera.setOrtographicProjection(-0.6f, 0.6f, -1, 1, 0.1f, 10);
 		shader.setViewMatrix(ortCamera.getViewMatrix());
 		shader.setProjectionMatrix(ortCamera.getProjectionMatrix());
 		shader.setEyePosition(ortCamera.getEye());
 
 		shader.setGlobalAmbient(new Color(1, 1, 1, 1));
 
-		maze.draw(false, shader);
-		player.draw(shader);
+		//maze.draw(false, shader);
+		//player.draw(shader);
+		pointsInd.draw(shader);
 	}
 
 	@Override
