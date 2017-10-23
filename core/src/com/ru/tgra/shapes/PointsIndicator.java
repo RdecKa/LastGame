@@ -11,6 +11,14 @@ public class PointsIndicator {
 		this.opponentColor = opponentColor;
 	}
 
+	public void addPoint(boolean myPoint) {
+		if (myPoint) {
+			this.numPoints ++;
+		} else {
+			this.opponentPoints ++;
+		}
+	}
+
 	public void draw(Shader3D shader) {
 		float ratio = (float) (this.numPoints) / (float) (this.numPoints + this.opponentPoints);
 		//System.out.println(ratio);

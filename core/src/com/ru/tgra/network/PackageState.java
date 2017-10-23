@@ -21,6 +21,10 @@ public class PackageState {
 		this.type = "newwall";
 	}
 
+	public PackageState() {
+		this.type = "defeat";
+	}
+
 	public String getType() { return type; }
 
 	public Point3D getPlayerPosition() {
@@ -38,6 +42,8 @@ public class PackageState {
 			return this.type + delimiter + this.playerPosition.toStringToSend(delimArg) + delimiter + this.playerDirection.toStringToSend(delimArg);
 		else if (this.type.equals("newwall"))
 			return this.type + delimiter + this.wall.toStringToSend(delimArg);
+		else if (this.type.equals("defeat"))
+			return this.type;
 		else
 			return null;
 	}
@@ -48,6 +54,8 @@ public class PackageState {
 			return new PackageState(Point3D.stringToPoint(components[1], delimArg), Vector3D.stringToVector(components[2], delimArg));
 		else if (components[0].equals("newwall"))
 			return new PackageState(Wall.stringToWall(components[1], delimArg));
+		else if (components[0].equals("defeat"))
+			return new PackageState();
 		else
 			return null;
 	}

@@ -19,6 +19,7 @@ public class GameClient extends Thread
 	private Random rand = new Random();
 	private PackageState lastPackageState;
 	private List<PackageState> wallPackets = new ArrayList<PackageState>();
+	private boolean defeat = false;
 
 	public static void main(String[] args) throws Exception {
 		new GameClient();
@@ -93,6 +94,11 @@ public class GameClient extends Thread
 		sendPackage(p);
 	}
 
+	public void announceVictory() {
+		PackageState p = new PackageState();
+		sendPackage(p);
+	}
+
 	public void sendPackage(PackageState p) {
 		String userInput = p.toStringToSend();
 		String receiver = "__server__";
@@ -143,6 +149,18 @@ public class GameClient extends Thread
 			return null;
 		}
 	}
+
+	public void setDefeat() {
+		this.defeat = true;
+	}
+
+	public boolean isDefeat() {
+		if (this.defeat) {
+			this.defeat = false;
+			return true;
+		}
+		return false;
+	}
 }
 
 // wait for messages from the chat server and print the out
@@ -168,6 +186,9 @@ class GameClientMessageReceiver extends Thread {
 					this.client.setLastPackageState(p);
 				else if (p.getType().equals("newwall"))
 					this.client.addWallPackage(p);
+				else  if (p.getType().equals("defeat")) {
+					this.client.setDefeat();
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("[system] could not read message");

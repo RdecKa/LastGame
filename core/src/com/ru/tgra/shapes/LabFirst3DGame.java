@@ -26,7 +26,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	Player player, thirdPerson, opponent;
 	Color playerColor, opponentColor;
 
-	boolean win, winAnimation;
+	boolean win, winAnimation, defeat;
 	public static int level, numWallsAtOnce;
 
 	Random rand;
@@ -174,6 +174,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			maze.incrementAngle(deltaTime * 50);
 			return;
 		} else if (win) {
+			pointsInd.addPoint(true);
+			client.announceVictory();
 			initLevel(++level);
 		}
 
@@ -197,6 +199,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (opponent != null)
 			maze.changeObstacles(deltaTime / 30.0f);
 
+		/**************** Server communication ****************/
 		client.sendToServer(player.position, player.direction);
 
 		PackageState p = client.getLastPackageState();
@@ -212,11 +215,19 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (pWall != null) {
 			this.maze.addWall(pWall.getWall());
 		}
+		defeat = client.isDefeat();
+		if (defeat) {
+			pointsInd.addPoint(false);
+			level ++;
+			initLevel(level);
+			return;
+		}
 	}
 	
 	private void display()
 	{
-		if (win && !winAnimation) {
+		if (win && !winAnimation || defeat) {
+			defeat = false;
 			return;
 		}
 
