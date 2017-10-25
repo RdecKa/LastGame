@@ -154,6 +154,10 @@ public class Maze {
 
 	public void addWall(Wall wall) {
 		this.innerWallsToBe.add(wall);
+		if (wall.isParallelToX())
+			this.maze[wall.getZ() - 1][wall.getX()].addNorthWall();
+		else
+			this.maze[wall.getZ()][wall.getX() - 1].addEastWall();
 	}
 
 	public void raiseWalls(float raiseFor) {
@@ -239,11 +243,11 @@ class Cell {
 		BoxGraphic.drawSolidCube();
 	}
 
-	private Wall addNorthWall() {
+	public Wall addNorthWall() {
 		this.northWall = true;
 		return new Wall(this.unit * this.wallWidth, this.unit, true,(this.posX + 0.5f) * this.unit, (this.posZ + 1) * this.unit);
 	}
-	private Wall addEastWall() {
+	public Wall addEastWall() {
 		this.eastWall = true;
 		return new Wall(this.unit * this.wallWidth, this.unit, false,(this.posX + 1) * this.unit, (this.posZ + 0.5f) * this.unit);
 	}

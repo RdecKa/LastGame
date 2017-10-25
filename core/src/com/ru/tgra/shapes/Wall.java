@@ -51,4 +51,16 @@ public class Wall {
 		this.centerZ = x;
 		this.parallelToX = !this.parallelToX;
 	}
+
+	public int getX() {
+		return (int) this.centerX;
+	}
+
+	public int getZ() {
+		return (int) this.centerZ;
+	}
+
+	public boolean isParallelToX() {
+		return this.parallelToX;
+	}
 }
