@@ -1,7 +1,5 @@
 package com.ru.tgra.shapes;
 
-import java.nio.FloatBuffer;
-
 public class Point3D {
 
 	public float x;
@@ -45,6 +43,31 @@ public class Point3D {
 
 	public float getDistanceTo(Point3D p) {
 		return (float) Math.sqrt(Math.pow(p.x - this.x, 2) + Math.pow(p.y - this.y, 2) + Math.pow(p.z - this.z, 2));
+	}
+
+	public Point3D getHalfPoint(Point3D p) {
+		float x = (this.x + p.x) / 2;
+		float y = (this.y + p.y) / 2;
+		float z = (this.z + p.z) / 2;
+		return new Point3D(x, y, z);
+	}
+
+	public void addPoint(Point3D p) {
+		this.x += p.x;
+		this.y += p.y;
+		this.z += p.z;
+	}
+
+	public void multiply(float f) {
+		this.x *= f;
+		this.y *= f;
+		this.z *= f;
+	}
+
+	public Point3D returnMultiplied(float f) {
+		Point3D p = this.clone();
+		p.multiply(f);
+		return p;
 	}
 
 	public Point3D clone() { return new Point3D(x, y, z); }
