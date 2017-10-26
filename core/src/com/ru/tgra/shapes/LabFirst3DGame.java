@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.ru.tgra.network.*;
 
 import java.util.Random;
+import java.util.Vector;
 
 public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
 	OrtographicCamera ortCamera;
@@ -34,6 +35,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	public static GameClient client;
 
 	PointsIndicator pointsInd;
+	private Vector<Bullet> bullets = new Vector<Bullet>();
 
 	@Override
 	public void create () {
@@ -164,6 +166,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			client.announceVictory(false);
 			initLevel(level);
 		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			bullets.add(new Bullet(0.08f, new Color(0.5f, 0.5f, 0.5f, 1), player.position, new Point3D(0, 0, mazeDepth)));
+		}
 	}
 	
 	private void update(float deltaTime)
@@ -197,6 +202,14 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		maze.incrementAngle(deltaTime * 50);
 		if (opponent != null)
 			maze.changeObstacles(deltaTime / 30.0f);
+
+		Vector<Bullet> bulletsToBeRemoved = new Vector<Bullet>();
+		for (Bullet bullet: this.bullets) {
+			boolean end = bullet.move(deltaTime);
+			if (end)
+				bulletsToBeRemoved.add(bullet);
+		}
+		this.bullets.removeAll(bulletsToBeRemoved);
 
 		/**************** Server communication ****************/
 		client.sendToServer(player.position, player.direction);
@@ -261,6 +274,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		if (opponent != null)
 			opponent.draw(shader);
+
+		for (Bullet bullet: this.bullets) {
+			bullet.draw(shader);
+		}
 
 		// Draw indicator
 		int screenWidth = Gdx.graphics.getWidth();
