@@ -167,7 +167,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			initLevel(level);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			bullets.add(new Bullet(0.08f, new Color(0.5f, 0.5f, 0.5f, 1), player.position, new Point3D(0, 0, mazeDepth)));
+			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position, new Point3D(0, 0, mazeDepth), maze));
 		}
 	}
 	
@@ -205,7 +205,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		Vector<Bullet> bulletsToBeRemoved = new Vector<Bullet>();
 		for (Bullet bullet: this.bullets) {
-			boolean end = bullet.move(deltaTime);
+			boolean end = bullet.move(deltaTime / 1.5f);
 			if (end)
 				bulletsToBeRemoved.add(bullet);
 		}

@@ -4,17 +4,36 @@ public class Bullet {
 	private float radius, existTime;
 	private Color color;
 	private BezierMotion motion;
+	private Maze maze;
 
-	public Bullet(float radius, Color color, Point3D startPoint, Point3D endPoint) {
+	public Bullet(float radius, Color color, Point3D startPoint, Point3D endPoint, Maze maze) {
 		this.radius = radius;
 		this.existTime = 0;
 		this.color = color;
 		this.motion = new BezierMotion(startPoint, endPoint);
+		this.maze = maze;
 	}
 
 	public boolean move(float moveFor) {
 		this.existTime += moveFor;
-		return this.existTime >= 1;
+		if (this.existTime >= 1) {
+			return true;
+		}
+		Point3D pos = this.getPosition();
+		float x = pos.x;
+		float z = pos.z;
+		int indX = (int) x;
+		int indZ = (int) z;
+		// Get position inside the current cell
+		x = x - indX;
+		z = z - indZ;
+		if (x > 0.95f && this.maze.hasEastWall(indX, indZ) ||
+			x < 0.05f && this.maze.hasEastWall(indX - 1, indZ) ||
+			z > 0.95f && this.maze.hasNorthWall(indX, indZ) ||
+			z < 0.05f && this.maze.hasNorthWall(indX, indZ - 1)) {
+			return true;
+		}
+		return false;
 	}
 
 	public Point3D getPosition() {
