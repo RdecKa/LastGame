@@ -106,8 +106,9 @@ public class Player {
 		return false;
 	}
 
-	public Point3D getAim() {
-		Point3D p = this.position.returnAddedVector(this.direction.returnScaled(3));
+	public Point3D getAim(Vector3D lookdown) {
+		float scale = 5 * (lookdown.y + 4) / 4.2f;
+		Point3D p = this.position.returnAddedVector(this.direction.returnScaled(scale));
 		p.y = 0;
 		return p;
 	}

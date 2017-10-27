@@ -136,10 +136,16 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				player.direction.rotateXZ(100 * deltaTime);
 			}
 			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				lookDown.y += deltaTime;
+				lookDown.y += deltaTime * 2;
+				if (lookDown.y > 0.2f) {
+					lookDown.y = 0.2f;
+				}
 			}
 			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				lookDown.y -= deltaTime;
+				lookDown.y -= deltaTime * 2;
+				if (lookDown.y < -4) {
+					lookDown.y = -4;
+				}
 			}
 		} else {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -167,7 +173,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			initLevel(level);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(), maze));
+			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(lookDown), maze));
 		}
 	}
 	
