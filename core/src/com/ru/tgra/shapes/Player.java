@@ -107,6 +107,12 @@ public class Player {
 
 		return false;
 	}
+
+	public Point3D getAim() {
+		Point3D p = this.position.returnAddedVector(this.direction.returnScaled(3));
+		p.y = 0;
+		return p;
+	}
 }
 
 class ThirdPerson extends Player {

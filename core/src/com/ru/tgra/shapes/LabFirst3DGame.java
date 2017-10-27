@@ -167,7 +167,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			initLevel(level);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position, new Point3D(0, 0, mazeDepth), maze));
+			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position, player.getAim(), maze));
 		}
 	}
 	
