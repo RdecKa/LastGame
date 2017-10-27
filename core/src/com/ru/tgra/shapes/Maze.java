@@ -35,7 +35,7 @@ public class Maze {
 		this.goalColor = new Color(1, 0, 0, 1);
 		this.obstacles = new Vector<Obstacle>();
 		for (int i = 0; i < this.mazeWidth - 1; i++) {
-			Point3D newPosition = new Point3D( i + 0.5f, 0.8f, i + 0.5f);
+			Point3D newPosition = new Point3D( i + 0.5f, 0, i + 0.5f);
 			obstacles.add(new Obstacle(newPosition, randWall.nextFloat() / 4f + 0.1f,
 					new Color(0.5f, 0.8f, 0.7f, 1)));
 		}

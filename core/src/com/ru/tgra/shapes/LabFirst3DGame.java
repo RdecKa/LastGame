@@ -82,7 +82,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		maze = new Maze(mazeWidth, mazeDepth);
 
-		player = new Player(new Point3D(mazeWidth - 0.5f, 0.8f, 0.5f), new Vector3D(-1, 0, 1), playerColor);
+		player = new Player(new Point3D(mazeWidth - 0.5f, 0, 0.5f), new Vector3D(-1, 0, 1), playerColor);
 
 		win = false;
 		winAnimation = false;
@@ -167,7 +167,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			initLevel(level);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position, player.getAim(), maze));
+			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(), maze));
 		}
 	}
 	
@@ -189,10 +189,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			win = player.move(moveFor, maze);
 			winAnimation = win;
 			fovProjection = 60;
-			Point3D center = player.position.returnAddedVector(player.direction).returnAddedVector(lookDown);
+			Point3D playerImaginaryPosition = player.position.returnAddedVector(new Vector3D(0, 0.8f, 0));
+			Point3D center = playerImaginaryPosition.returnAddedVector(player.direction).returnAddedVector(lookDown);
 			moveForward = player.direction;
 			moveLeft = up.cross(moveForward);
-			perspCamera.Look3D(player.position, center, up);
+			perspCamera.Look3D(playerImaginaryPosition, center, up);
 		} else {
 			player.move(new Vector3D(0, 0, 0), maze);
 			Point3D mapCenter = new Point3D(mazeWidth / 2, 1, mazeDepth / 2);

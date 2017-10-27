@@ -1,5 +1,7 @@
 package com.ru.tgra.shapes;
 
+import java.util.Vector;
+
 public class Bullet {
 	private float radius, existTime;
 	private Color color;
@@ -27,11 +29,22 @@ public class Bullet {
 		// Get position inside the current cell
 		x = x - indX;
 		z = z - indZ;
+
+		// Check collisions with walls
 		if (x > 0.95f && this.maze.hasEastWall(indX, indZ) ||
 			x < 0.05f && this.maze.hasEastWall(indX - 1, indZ) ||
 			z > 0.95f && this.maze.hasNorthWall(indX, indZ) ||
 			z < 0.05f && this.maze.hasNorthWall(indX, indZ - 1)) {
 			return true;
+		}
+
+		// Check collisions with balls
+		Vector<Obstacle> obstacles = maze.getObstacles();
+		for (Obstacle obst : obstacles) {
+			float diff = obst.getPosition().getDistanceTo(pos) - obst.getRadius() - this.radius;
+			if (diff < -this.radius) {
+				return true;
+			}
 		}
 		return false;
 	}

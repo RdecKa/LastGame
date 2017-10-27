@@ -21,7 +21,7 @@ public class Player {
 		shader.setMaterialSpecular(new Color(1, 1, 1, 1));
 		shader.setShininess(20);
 		ModelMatrix.main.loadIdentityMatrix();
-		ModelMatrix.main.addTranslation(position.x, position.y - 2 * this.radius, position.z);
+		ModelMatrix.main.addTranslation(position.x, position.y, position.z);
 		ModelMatrix.main.addScale(this.radius, this.radius, this.radius);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere();
@@ -30,7 +30,7 @@ public class Player {
 		shader.setMaterialDiffuse(headColor);
 		Point3D headPos = this.position.clone();
 		headPos.add(this.direction.returnScaled(0.15f));
-		headPos.y -= this.radius * 1.2f;
+		headPos.y += this.radius * 0.8f;
 		ModelMatrix.main.loadIdentityMatrix();
 		ModelMatrix.main.addTranslation(headPos.x, headPos.y, headPos.z);
 		ModelMatrix.main.addScale(this.radius / 3f, this.radius / 3f, this.radius / 3f);
@@ -53,13 +53,11 @@ public class Player {
 		Vector<Obstacle> obstacles = maze.getObstacles();
 		Point3D wantToGo = this.position.returnAddedVector(moveFor);
 		for (Obstacle obst : obstacles) {
-			//System.out.println(obst.getPosition().getDistanceTo(this.position) + " " + obst.getRadius() + " " + this.radius);
 			float diff = obst.getPosition().getDistanceTo(wantToGo) - obst.getRadius() - this.radius;
 			if (diff < 0) {
 				Vector3D ballWant = Vector3D.difference(wantToGo, obst.getPosition());
 				Vector3D changeDirection = ballWant.returnNormalized().returnScaled(-diff);
 				moveFor.add(changeDirection);
-
 			}
 		}
 

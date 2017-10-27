@@ -18,7 +18,7 @@ public class Obstacle {
 		shader.setMaterialSpecular(new Color(1, 1, 1, 1));
 		shader.setShininess(10);
 		ModelMatrix.main.loadIdentityMatrix();
-		ModelMatrix.main.addTranslation(this.position.x , this.position.y - 0.8f, this.position.z);
+		ModelMatrix.main.addTranslation(this.position.x , this.position.y, this.position.z);
 		ModelMatrix.main.addScale(this.radius, this.radius, this.radius);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere();
