@@ -7,6 +7,7 @@ public class Bullet {
 	private Color color;
 	private BezierMotion motion;
 	private Maze maze;
+	private Point3D position;
 
 	public Bullet(float radius, Color color, Point3D startPoint, Point3D endPoint, Maze maze) {
 		this.radius = radius;
@@ -14,6 +15,13 @@ public class Bullet {
 		this.color = color;
 		this.motion = new BezierMotion(startPoint, endPoint);
 		this.maze = maze;
+		this.position = null;
+	}
+
+	public Bullet(Point3D position) {
+		this.radius = 0.05f;
+		this.color = new Color(0.5f, 0.5f, 0.5f, 1);
+		this.position = position;
 	}
 
 	public boolean move(float moveFor) {
@@ -50,7 +58,10 @@ public class Bullet {
 	}
 
 	public Point3D getPosition() {
-		return motion.getPosition(this.existTime);
+		if (this.motion != null)
+			return this.motion.getPosition(this.existTime);
+		else
+			return this.position;
 	}
 
 	public void draw(Shader3D shader) {

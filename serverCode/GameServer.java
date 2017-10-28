@@ -152,8 +152,8 @@ class GameServerConnector extends Thread {
 
 			if (msg_received.text().length() == 0) // invalid message
 				continue;
-			//if (msg_received.text().split("kkk")[0].equals("newwall"))
-			//	System.out.println("[new data] [" + msg_received.sender() + "] : " + msg_received.text() + msg_received.time()); // print the incoming message in the console
+			//if (msg_received.text().split("kkk")[0].equals("bullet"))
+				//System.out.println("[new data] [" + msg_received.sender() + "] : " + msg_received.text() + msg_received.time()); // print the incoming message in the console
 
 			Message msg_send = msg_received;
 			try {

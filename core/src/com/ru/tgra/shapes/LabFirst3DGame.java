@@ -36,6 +36,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	PointsIndicator pointsInd;
 	private Vector<Bullet> bullets = new Vector<Bullet>();
+	private Bullet opponentBullet;
 
 	@Override
 	public void create () {
@@ -173,7 +174,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			initLevel(level);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(lookDown), maze));
+			if (this.bullets.size() < 1)
+				bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(lookDown), maze));
 		}
 	}
 	
@@ -220,6 +222,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		/**************** Server communication ****************/
 		client.sendToServer(player.position, player.direction);
+		if (this.bullets.size() > 0) {
+			client.sendToServer(this.bullets.firstElement().getPosition());
+		}
 
 		PackageState p = client.getLastPackageState();
 		if (p != null) {
@@ -246,6 +251,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			defeat = true;
 			return;
 		}
+		PackageState pBullet = client.getBullet();
+		if (pBullet != null)
+			opponentBullet = new Bullet(pBullet.getBulletPosition());
+		else
+			opponentBullet = null;
 	}
 	
 	private void display()
@@ -284,6 +294,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		for (Bullet bullet: this.bullets) {
 			bullet.draw(shader);
+		}
+
+		if (opponentBullet != null) {
+			opponentBullet.draw(shader);
 		}
 
 		// Draw indicator

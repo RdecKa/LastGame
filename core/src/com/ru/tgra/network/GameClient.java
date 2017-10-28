@@ -20,6 +20,7 @@ public class GameClient extends Thread
 	private PackageState lastPackageState;
 	private List<PackageState> wallPackets = new ArrayList<PackageState>();
 	private PackageState defeat;
+	private PackageState bullet;
 
 	public static void main(String[] args) throws Exception {
 		new GameClient();
@@ -99,6 +100,11 @@ public class GameClient extends Thread
 		sendPackage(p);
 	}
 
+	public void sendToServer(Point3D bulletPosition) {
+		PackageState p = new PackageState(bulletPosition);
+		sendPackage(p);
+	}
+
 	public void sendPackage(PackageState p) {
 		String userInput = p.toStringToSend();
 		String receiver = "__server__";
@@ -159,6 +165,16 @@ public class GameClient extends Thread
 		this.defeat = null;
 		return tmp;
 	}
+
+	public void addBulletPackage(PackageState bulletPackage) {
+		this.bullet = bulletPackage;
+	}
+
+	public PackageState getBullet() {
+		PackageState p = this.bullet;
+		this.bullet = null;
+		return p;
+	}
 }
 
 // wait for messages from the chat server and print the out
@@ -184,9 +200,12 @@ class GameClientMessageReceiver extends Thread {
 					this.client.setLastPackageState(p);
 				else if (p.getType().equals("newwall"))
 					this.client.addWallPackage(p);
-				else  if (p.getType().equals("defeat")) {
+				else if (p.getType().equals("defeat"))
 					this.client.setDefeat(p);
-				}
+				else if (p.getType().equals("bullet"))
+					this.client.addBulletPackage(p);
+				else
+					System.out.println("This type of package is not supported.");
 			}
 		} catch (Exception e) {
 			System.err.println("[system] could not read message");

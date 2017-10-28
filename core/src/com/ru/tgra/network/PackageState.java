@@ -6,7 +6,7 @@ public class PackageState {
 	private static String delimiter = "kkk";
 	private static String delimArg = "jjj";
 	private String type;
-	private Point3D playerPosition;
+	private Point3D playerPosition, bulletPosition;
 	private Vector3D playerDirection;
 	private Wall wall;
 	private boolean win;
@@ -27,6 +27,11 @@ public class PackageState {
 		this.win = win;
 	}
 
+	public PackageState(Point3D bulletPosition) {
+		this.bulletPosition = bulletPosition;
+		this.type = "bullet";
+	}
+
 	public String getType() { return type; }
 
 	public Point3D getPlayerPosition() {
@@ -39,6 +44,8 @@ public class PackageState {
 
 	public boolean isDefeated() { return win; }
 
+	public Point3D getBulletPosition() { return bulletPosition;	}
+
 	public String toStringToSend() {
 		if (this.type.equals("position"))
 			return this.type + delimiter + this.playerPosition.toStringToSend(delimArg) + delimiter + this.playerDirection.toStringToSend(delimArg);
@@ -46,6 +53,8 @@ public class PackageState {
 			return this.type + delimiter + this.wall.toStringToSend(delimArg);
 		else if (this.type.equals("defeat"))
 			return this.type + delimiter + this.win;
+		else if (this.type.equals("bullet"))
+			return this.type + delimiter + this.bulletPosition.toStringToSend(delimArg);
 		else
 			return null;
 	}
@@ -58,6 +67,8 @@ public class PackageState {
 			return new PackageState(Wall.stringToWall(components[1], delimArg));
 		else if (components[0].equals("defeat"))
 			return new PackageState(Boolean.parseBoolean(components[1]));
+		else if (components[0].equals("bullet"))
+			return new PackageState(Point3D.stringToPoint(components[1], delimArg));
 		else
 			return null;
 	}
@@ -74,6 +85,11 @@ public class PackageState {
 			this.playerDirection.z = directionX;
 		} else if (this.type.equals("newwall")) {
 			this.wall.reflect();
+		} else if (this.type.equals("bullet")) {
+			float bulletX = this.bulletPosition.x;
+			float bulletZ = this.bulletPosition.z;
+			this.bulletPosition.x = bulletZ;
+			this.bulletPosition.z = bulletX;
 		}
 	}
 }
