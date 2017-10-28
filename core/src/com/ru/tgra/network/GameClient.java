@@ -21,6 +21,7 @@ public class GameClient extends Thread
 	private List<PackageState> wallPackets = new ArrayList<PackageState>();
 	private PackageState defeat;
 	private PackageState bullet;
+	private PackageState newStart;
 
 	public static void main(String[] args) throws Exception {
 		new GameClient();
@@ -105,6 +106,11 @@ public class GameClient extends Thread
 		sendPackage(p);
 	}
 
+	public void announceNewStart() {
+		PackageState p = new PackageState();
+		sendPackage(p);
+	}
+
 	public void sendPackage(PackageState p) {
 		String userInput = p.toStringToSend();
 		String receiver = "__server__";
@@ -175,6 +181,18 @@ public class GameClient extends Thread
 		this.bullet = null;
 		return p;
 	}
+
+	public void setNewStart(PackageState p) {
+		this.newStart = p;
+	}
+
+	public boolean isNewStart() {
+		if (this.newStart != null) {
+			this.newStart = null;
+			return true;
+		}
+		return false;
+	}
 }
 
 // wait for messages from the chat server and print the out
@@ -204,6 +222,8 @@ class GameClientMessageReceiver extends Thread {
 					this.client.setDefeat(p);
 				else if (p.getType().equals("bullet"))
 					this.client.addBulletPackage(p);
+				else if (p.getType().equals("init"))
+					this.client.setNewStart(p);
 				else
 					System.out.println("This type of package is not supported.");
 			}

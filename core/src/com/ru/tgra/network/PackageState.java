@@ -32,6 +32,10 @@ public class PackageState {
 		this.type = "bullet";
 	}
 
+	public PackageState() {
+		this.type = "init";
+	}
+
 	public String getType() { return type; }
 
 	public Point3D getPlayerPosition() {
@@ -55,6 +59,8 @@ public class PackageState {
 			return this.type + delimiter + this.win;
 		else if (this.type.equals("bullet"))
 			return this.type + delimiter + this.bulletPosition.toStringToSend(delimArg);
+		else if (this.type.equals("init"))
+			return this.type;
 		else
 			return null;
 	}
@@ -69,6 +75,8 @@ public class PackageState {
 			return new PackageState(Boolean.parseBoolean(components[1]));
 		else if (components[0].equals("bullet"))
 			return new PackageState(Point3D.stringToPoint(components[1], delimArg));
+		else if (components[0].equals("init"))
+			return new PackageState();
 		else
 			return null;
 	}

@@ -7,6 +7,7 @@ public class Player {
 	public Vector3D direction;
 	private Color color, headColor;
 	private float radius;
+	private float angleAnimation;
 
 	public Player(Point3D startPosition, Vector3D startDirection, Color headColor) {
 		this.position = startPosition;
@@ -14,6 +15,7 @@ public class Player {
 		this.color = new Color(0, 0, 0, 1);
 		this.headColor = headColor;
 		this.radius = 0.4f;
+		this.angleAnimation = 0;
 	}
 
 	public void draw(Shader3D shader) {
@@ -115,6 +117,16 @@ public class Player {
 
 	public float getRadius() {
 		return this.radius;
+	}
+
+	public boolean rotateVictory(float angle) {
+		this.angleAnimation += angle;
+		if (this.angleAnimation > 360) {
+			this.angleAnimation = 0;
+			return false;
+		}
+		this.direction.rotateXZ(angle);
+		return true;
 	}
 }
 

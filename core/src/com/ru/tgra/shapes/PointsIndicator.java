@@ -17,7 +17,6 @@ public class PointsIndicator {
 		} else {
 			this.opponentPoints ++;
 		}
-		System.out.println("ME: " + this.numPoints + " OPP: " + this.opponentPoints);
 	}
 
 	public void draw(Shader3D shader) {

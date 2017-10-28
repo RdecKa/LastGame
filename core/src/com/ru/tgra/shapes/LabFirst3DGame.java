@@ -27,7 +27,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	Player player, thirdPerson, opponent;
 	Color playerColor, opponentColor;
 
-	boolean win, winAnimation, defeat, killed;
+	boolean win, winAnimation, defeat, killed, killAnimation, victory, victoryAnimation;
 	public static int level, numWallsAtOnce;
 
 	Random rand;
@@ -87,6 +87,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		win = false;
 		winAnimation = false;
+		killed = false;
+		killAnimation = false;
+		victory = false;
+		victoryAnimation = false;
 
 		lookDown = new Vector3D(0, -0.5f, 0);
 		moveLeft = new Vector3D(1, 0, 0);
@@ -110,7 +114,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		lightPos1 = new Point3D(mazeWidth - 0.5f, 1, mazeDepth - 0.5f);
 		lightCol1 = new Color(1, 1, 1, 1);
 
-		killed = false;
 		opponentBullet = null;
 	}
 
@@ -173,9 +176,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			firstPersonView = !firstPersonView;
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-			client.announceVictory(false);
+			killAnimation = true;
+			killed = true;
 			pointsInd.addPoint(false);
-			initLevel(level);
+			client.announceVictory(false);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			if (this.bullets.size() < 1)
@@ -186,29 +190,41 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private void update(float deltaTime)
 	{
 		if (win && winAnimation) {
-			winAnimation = maze.decreaseGoalSize(deltaTime);
+			winAnimation = maze.decreaseGoalSize(deltaTime / 2);
 			maze.incrementAngle(deltaTime * 50);
 			return;
 		} else if (win) {
 			pointsInd.addPoint(true);
-			client.announceVictory(true);
 			initLevel(++level);
+			client.announceNewStart();
+		} else if (victory && victoryAnimation) {
+			victoryAnimation = player.rotateVictory(deltaTime * 400);
+		} else if (victory) {
+			client.announceNewStart();
+			initLevel(level);
+		} else if (killed && killAnimation) {
+			lookDown.y -= deltaTime;
+			if (client.isNewStart())
+				initLevel(level);
 		} else if (killed) {
 			pointsInd.addPoint(false);
-			client.announceVictory(false);
 			initLevel(level);
 		}
 
 		shader.setShininess(5);
 
 		if (firstPersonView) {
-			win = player.move(moveFor, maze);
-			winAnimation = win;
-			fovProjection = 60;
+			if (!victoryAnimation) {
+				win = player.move(moveFor, maze);
+				if (win)
+					client.announceVictory(true);
+				winAnimation = win;
+				fovProjection = 60;
+				moveForward = player.direction;
+				moveLeft = up.cross(moveForward);
+			}
 			Point3D playerImaginaryPosition = player.position.returnAddedVector(new Vector3D(0, 0.8f, 0));
 			Point3D center = playerImaginaryPosition.returnAddedVector(player.direction).returnAddedVector(lookDown);
-			moveForward = player.direction;
-			moveLeft = up.cross(moveForward);
 			perspCamera.Look3D(playerImaginaryPosition, center, up);
 		} else {
 			player.move(new Vector3D(0, 0, 0), maze);
@@ -227,6 +243,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				bulletsToBeRemoved.add(bullet);
 		}
 		this.bullets.removeAll(bulletsToBeRemoved);
+
+		if (victoryAnimation) {
+			return;
+		}
 
 		/**************** Server communication ****************/
 		client.sendToServer(player.position, player.direction);
@@ -251,20 +271,27 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (pDefeat != null) {
 			if (pDefeat.isDefeated()) {
 				pointsInd.addPoint(false);
-				initLevel(++level);
+				level++;
+				killed = true;
+				killAnimation = true;
 			} else {
 				pointsInd.addPoint(true);
-				initLevel(level);
+				victoryAnimation = true;
+				victory = true;
 			}
 			defeat = true;
 			return;
 		}
 		PackageState pBullet = client.getBullet();
-		if (pBullet != null) {
+		if (pBullet != null && !killed) {
 			opponentBullet = new Bullet(pBullet.getBulletPosition());
 			float diff = opponentBullet.getPosition().getDistanceTo(player.position) - opponentBullet.getRadius() - player.getRadius();
-			if (diff < 0)
+			if (diff < 0) {
 				killed = true;
+				killAnimation = true;
+				pointsInd.addPoint(false);
+				client.announceVictory(false);
+			}
 		}
 		else
 			opponentBullet = null;
@@ -272,7 +299,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	
 	private void display()
 	{
-		if (win && !winAnimation || defeat || killed) {
+		if (win && !winAnimation || victory && !victoryAnimation || defeat || killed && !killAnimation) {
 			defeat = false;
 			return;
 		}
@@ -318,7 +345,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		int mapWidth = screenWidth;
 		int mapHeight = screenHeight / 30;
 		int margin = 10;
-		//System.out.println((screenWidth - mapWidth - margin) + " " + (screenHeight - mapHeight - margin) + " " + mapWidth + " " + mapHeight);
 		Gdx.gl20.glViewport(0, screenHeight - mapHeight - margin, mapWidth, mapHeight);
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
