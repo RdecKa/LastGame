@@ -112,6 +112,10 @@ public class Player {
 		p.y = 0;
 		return p;
 	}
+
+	public float getRadius() {
+		return this.radius;
+	}
 }
 
 class ThirdPerson extends Player {

@@ -17,14 +17,13 @@ public class PointsIndicator {
 		} else {
 			this.opponentPoints ++;
 		}
+		System.out.println("ME: " + this.numPoints + " OPP: " + this.opponentPoints);
 	}
 
 	public void draw(Shader3D shader) {
 		float ratio = (float) (this.numPoints) / (float) (this.numPoints + this.opponentPoints);
-		//System.out.println(ratio);
 		float playerCenter = -0.5f + 0.5f * ratio;
 		float opponentCenter = 0.5f - 0.5f * (1 - ratio);
-		//System.out.println(playerCenter + " " + opponentCenter);
 
 		shader.setMaterialDiffuse(this.playerColor);
 		ModelMatrix.main.loadIdentityMatrix();

@@ -27,7 +27,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	Player player, thirdPerson, opponent;
 	Color playerColor, opponentColor;
 
-	boolean win, winAnimation, defeat;
+	boolean win, winAnimation, defeat, killed;
 	public static int level, numWallsAtOnce;
 
 	Random rand;
@@ -109,6 +109,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		lightPos1 = new Point3D(mazeWidth - 0.5f, 1, mazeDepth - 0.5f);
 		lightCol1 = new Color(1, 1, 1, 1);
+
+		killed = false;
+		opponentBullet = null;
 	}
 
 	private void input(float deltaTime)
@@ -171,6 +174,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
 			client.announceVictory(false);
+			pointsInd.addPoint(false);
 			initLevel(level);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -189,6 +193,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			pointsInd.addPoint(true);
 			client.announceVictory(true);
 			initLevel(++level);
+		} else if (killed) {
+			pointsInd.addPoint(false);
+			client.announceVictory(false);
+			initLevel(level);
 		}
 
 		shader.setShininess(5);
@@ -243,24 +251,28 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (pDefeat != null) {
 			if (pDefeat.isDefeated()) {
 				pointsInd.addPoint(false);
-				level++;
-				initLevel(level);
+				initLevel(++level);
 			} else {
+				pointsInd.addPoint(true);
 				initLevel(level);
 			}
 			defeat = true;
 			return;
 		}
 		PackageState pBullet = client.getBullet();
-		if (pBullet != null)
+		if (pBullet != null) {
 			opponentBullet = new Bullet(pBullet.getBulletPosition());
+			float diff = opponentBullet.getPosition().getDistanceTo(player.position) - opponentBullet.getRadius() - player.getRadius();
+			if (diff < 0)
+				killed = true;
+		}
 		else
 			opponentBullet = null;
 	}
 	
 	private void display()
 	{
-		if (win && !winAnimation || defeat) {
+		if (win && !winAnimation || defeat || killed) {
 			defeat = false;
 			return;
 		}

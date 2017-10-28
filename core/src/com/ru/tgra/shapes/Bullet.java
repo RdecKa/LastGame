@@ -64,6 +64,10 @@ public class Bullet {
 			return this.position;
 	}
 
+	public float getRadius() {
+		return this.radius;
+	}
+
 	public void draw(Shader3D shader) {
 		Point3D position = this.getPosition();
 		shader.setMaterialDiffuse(this.color);
