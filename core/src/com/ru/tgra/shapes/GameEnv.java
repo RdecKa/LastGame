@@ -11,7 +11,7 @@ public class GameEnv {
 		/*Color col = new Color(0.7f, 0.2f, 0, 1);
 		shader.setColor(col);*/
 
-		BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
+		BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer(), shader.getUVPointer());
 		SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
 		SincGraphic.create(shader.getVertexPointer());
 		CoordFrameGraphic.create(shader.getVertexPointer());

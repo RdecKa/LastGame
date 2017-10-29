@@ -2,6 +2,7 @@ package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.nio.FloatBuffer;
 
@@ -12,16 +13,15 @@ public class Shader3D {
 
 	public static int positionLoc;
 	public static int normalLoc;
+	public static int uvLoc;
 
 	public static int modelMatrixLoc;
 	public static int viewMatrixLoc;
 	public static int projectionMatrixLoc;
 
 	public static int eyePosLoc;
-	//public static int useLightLoc;
 	public static int globalAmbient;
 
-	//public static int colorLoc;
 	public static int lightPosDirLoc;
 	public static int lightPosPosLoc;
 	public static int lightColDirLoc;
@@ -29,6 +29,14 @@ public class Shader3D {
 	public static int matDiffLoc;
 	public static int matSpecLoc;
 	public static int matShinLoc;
+
+	public static boolean usesDiffuseTexture;
+	public static int usesDiffuseTexLoc;
+	public static int diffuseTextureLoc;
+
+	public static boolean usesSpecularTexture;
+	public static int usesSpecularTexLoc;
+	public static int specularTextureLoc;
 
 	public Shader3D() {
 		String vertexShaderString;
@@ -46,6 +54,11 @@ public class Shader3D {
 		Gdx.gl.glCompileShader(vertexShaderID);
 		Gdx.gl.glCompileShader(fragmentShaderID);
 
+		System.out.println("Vertex shader compile messages:");
+		System.out.println(Gdx.gl.glGetShaderInfoLog(vertexShaderID));
+		System.out.println("Fragment shader compile messages:");
+		System.out.println(Gdx.gl.glGetShaderInfoLog(fragmentShaderID));
+
 		renderingProgramID = Gdx.gl.glCreateProgram();
 
 		Gdx.gl.glAttachShader(renderingProgramID, vertexShaderID);
@@ -59,9 +72,12 @@ public class Shader3D {
 		normalLoc				= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_normal");
 		Gdx.gl.glEnableVertexAttribArray(normalLoc);
 
+		uvLoc					= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_uv");
+		Gdx.gl.glEnableVertexAttribArray(uvLoc);
+
 		modelMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_modelMatrix");
 		viewMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
-		projectionMatrixLoc	= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
+		projectionMatrixLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
 
 		eyePosLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
 		globalAmbient 			= Gdx.gl.glGetUniformLocation(renderingProgramID, "globalAmbient");
@@ -73,6 +89,11 @@ public class Shader3D {
 		matDiffLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
 		matSpecLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
 		matShinLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
+
+		usesDiffuseTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
+		usesSpecularTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesSpecularTexture");
+		diffuseTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
+		specularTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_specularTexture");
 
 		Gdx.gl.glUseProgram(renderingProgramID);
 	}
@@ -117,6 +138,8 @@ public class Shader3D {
 		return normalLoc;
 	}
 
+	public int getUVPointer() { return uvLoc; }
+
 	public void setModelMatrix(FloatBuffer matrix) {
 		Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, matrix);
 	}
@@ -127,5 +150,35 @@ public class Shader3D {
 
 	public void setProjectionMatrix(FloatBuffer matrix) {
 		Gdx.gl.glUniformMatrix4fv(projectionMatrixLoc, 1, false, matrix);
+	}
+
+	public void setDiffuseTexture(Texture tex) {
+		if (tex == null) {
+			Gdx.gl.glUniform1f(usesDiffuseTexLoc, 0.0f);
+			usesDiffuseTexture = false;
+		} else {
+			tex.bind(0);
+			Gdx.gl.glUniform1i(diffuseTextureLoc, 0);
+			Gdx.gl.glUniform1f(usesDiffuseTexLoc, 1.0f);
+			usesDiffuseTexture = true;
+
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+		}
+	}
+
+	public void setSpecularTexture(Texture tex) {
+		if (tex == null) {
+			Gdx.gl.glUniform1f(usesSpecularTexLoc, 0.0f);
+			usesSpecularTexture = false;
+		} else {
+			tex.bind(0);
+			Gdx.gl.glUniform1i(specularTextureLoc, 0);
+			Gdx.gl.glUniform1f(usesSpecularTexLoc, 1.0f);
+			usesSpecularTexture = true;
+
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+		}
 	}
 }

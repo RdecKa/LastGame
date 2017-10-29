@@ -1,5 +1,8 @@
 package com.ru.tgra.shapes;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
 import java.util.Random;
 import java.util.Vector;
 
@@ -15,6 +18,7 @@ public class Maze {
 	private float goalBoxSize;
 	private Color goalColor;
 	private Vector<Obstacle> obstacles;
+	private Texture texWall;
 
 	public Maze(int mazeWidth, int mazeDepth) {
 		this.mazeWidth = mazeWidth;
@@ -39,6 +43,7 @@ public class Maze {
 			obstacles.add(new Obstacle(newPosition, randWall.nextFloat() / 4f + 0.1f,
 					new Color(0.5f, 0.8f, 0.7f, 1)));
 		}
+		this.texWall = new Texture(Gdx.files.internal("textures/drops.jpg"));
 	}
 
 	public void draw(boolean drawWalls, Shader3D shader) {
@@ -58,6 +63,7 @@ public class Maze {
 		if (drawWalls) {
 			// Draw outer walls
 			shader.setMaterialDiffuse(this.wallColor);
+			shader.setSpecularTexture(this.texWall);
 
 			for (int i = 0; i < 4; i++) {
 				ModelMatrix.main.loadIdentityMatrix();
@@ -95,6 +101,8 @@ public class Maze {
 			for (Wall wall : this.innerWallsToBe) {
 				wall.draw(this.unit, shader);
 			}
+
+			shader.setSpecularTexture(null);
 		}
 
 		// Draw goal
