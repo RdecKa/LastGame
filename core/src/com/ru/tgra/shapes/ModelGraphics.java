@@ -22,20 +22,20 @@ public class ModelGraphics {
 		ModelGraphics.uvPointer = uvPointer;
 
 		//VERTEX ARRAY IS FILLED HERE
-		float[] v_center_top = {0, 0.5f, 0};
-		float[] v_center_bottom = {0, -0.5f, 0};
-		float[] v_center_right = {0.5f, 0, 0};
-		float[] v_center_left = {-0.5f, 0, 0};
-		float[] v_center_front = {0, 0, 0.5f};
-		float[] v_center_back = {0, 0, -0.5f};
-		float[] v_tlf = {-0.25f, 0.25f, 0.25f}; // tlp = top, left, front
-		float[] v_tlb = {-0.25f, 0.25f, -0.25f};
-		float[] v_trb = {0.25f, 0.25f, -0.25f};
-		float[] v_trf = {0.25f, 0.25f, 0.25f};
-		float[] v_brf = {0.25f, -0.25f, 0.25f};
-		float[] v_brb = {0.25f, -0.25f, -0.25f};
-		float[] v_blb = {-0.25f, -0.25f, -0.25f};
-		float[] v_blf = {-0.25f, -0.25f, 0.25f};
+		float[] v_center_top = {0, 1, 0};
+		float[] v_center_bottom = {0, -1, 0};
+		float[] v_center_right = {1, 0, 0};
+		float[] v_center_left = {-1, 0, 0};
+		float[] v_center_front = {0, 0, 1};
+		float[] v_center_back = {0, 0, -1};
+		float[] v_tlf = {-0.3333f, 0.3333f, 0.3333f}; // tlp = top, left, front
+		float[] v_tlb = {-0.3333f, 0.3333f, -0.3333f};
+		float[] v_trb = {0.3333f, 0.3333f, -0.3333f};
+		float[] v_trf = {0.3333f, 0.3333f, 0.3333f};
+		float[] v_brf = {0.3333f, -0.3333f, 0.3333f};
+		float[] v_brb = {0.3333f, -0.3333f, -0.3333f};
+		float[] v_blb = {-0.3333f, -0.3333f, -0.3333f};
+		float[] v_blf = {-0.3333f, -0.3333f, 0.3333f};
 
 		int numVert = 3 * 72;
 
@@ -78,35 +78,35 @@ public class ModelGraphics {
 		vertexBuffer.rewind();
 
 		//NORMAL ARRAY IS FILLED HERE
-		float[] n_tr = {1, 1, 0}; // tr = top, right
-		float[] n_tl = {-1, 1, 0}; // tl = top, left
-		float[] n_tf = {0, 1, 1}; // tf = top, front
-		float[] n_tb = {0, 1, -1}; // th = top, back
+		float[] n_tr = {2, 1, 0}; // tr = top, right
+		float[] n_tl = {-2, 1, 0}; // tl = top, left
+		float[] n_tf = {0, 1, 2}; // tf = top, front
+		float[] n_tb = {0, 1, -2}; // th = top, back
 
-		float[] n_hr = {1, -1, 0}; // ht = bottom (h), right
-		float[] n_hl = {-1, -1, 0};
-		float[] n_hf = {0, -1, 1};
-		float[] n_hb = {0, -1, -1};
+		float[] n_hr = {2, -1, 0}; // ht = bottom (h), right
+		float[] n_hl = {-2, -1, 0};
+		float[] n_hf = {0, -1, 2};
+		float[] n_hb = {0, -1, -2};
 
-		float[] n_lt = {-1, 1, 0};
-		float[] n_lh = {-1, -1, 0};
-		float[] n_lf = {-1, 0, 1};
-		float[] n_lb = {-1, 0, -1};
+		float[] n_lt = {-1, 2, 0};
+		float[] n_lh = {-1, -2, 0};
+		float[] n_lf = {-1, 0, 2};
+		float[] n_lb = {-1, 0, -2};
 
-		float[] n_rt = {1, 1, 0};
-		float[] n_rh = {1, -1, 0};
-		float[] n_rf = {1, 0, 1};
-		float[] n_rb = {1, 0, -1};
+		float[] n_rt = {1, 2, 0};
+		float[] n_rh = {1, -2, 0};
+		float[] n_rf = {1, 0, 2};
+		float[] n_rb = {1, 0, -2};
 
-		float[] n_ft = {0, 1, 1};
-		float[] n_fh = {0, -1, 1};
-		float[] n_fl = {-1, 0, 1};
-		float[] n_fr = {1, 0, 1};
+		float[] n_ft = {0, 2, 1};
+		float[] n_fh = {0, -2, 1};
+		float[] n_fl = {-2, 0, 1};
+		float[] n_fr = {2, 0, 1};
 
-		float[] n_bt = {0, 1, -1};
-		float[] n_bh = {0, -1, -1};
-		float[] n_bl = {-1, 0, -1};
-		float[] n_br = {1, 0, -1};
+		float[] n_bt = {0, 2, -1};
+		float[] n_bh = {0, -2, -1};
+		float[] n_bl = {-2, 0, -1};
+		float[] n_br = {2, 0, -1};
 
 		float[][] normals = {
 				n_tf, n_tf, n_tf,
