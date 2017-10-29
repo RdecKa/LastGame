@@ -114,7 +114,8 @@ public class Maze {
 		ModelMatrix.main.addRotationX(this.goalBoxAngle);
 		ModelMatrix.main.addRotationY(this.goalBoxAngle);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube();
+		//BoxGraphic.drawSolidCube();
+		ModelGraphics.drawSolidModel();
 
 		// Draw obstacles
 		for (Obstacle obst: this.obstacles) {

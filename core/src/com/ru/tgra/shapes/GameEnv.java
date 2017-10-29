@@ -15,6 +15,7 @@ public class GameEnv {
 		SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
 		SincGraphic.create(shader.getVertexPointer());
 		CoordFrameGraphic.create(shader.getVertexPointer());
+		ModelGraphics.create(shader.getVertexPointer(), shader.getNormalPointer(), shader.getUVPointer());
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 

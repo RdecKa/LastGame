@@ -140,7 +140,7 @@ public class BoxGraphic {
 				0, 0,
 				0, 1,
 				1, 0,
-				1, 1,};
+				1, 1};
 
 		uvBuffer = BufferUtils.newFloatBuffer(48);
 		uvBuffer.put(uvArray);
