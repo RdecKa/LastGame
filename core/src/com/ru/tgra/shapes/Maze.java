@@ -30,13 +30,13 @@ public class Maze {
 				this.maze[z][x] = new Cell(x, z, this.unit, z == mazeDepth - 1, x == mazeWidth - 1);
 			}
 		}
-		this.wallColor = new Color(0.5f, 0.5f, 0.5f, 1);
+		this.wallColor = new Color(10f / 256, 156f / 256, 204f / 256, 1);
 		this.innerWalls = new Vector<Wall>();
 		this.innerWallsToBe = new Vector<Wall>();
 		this.wallWidth = 0.1f;
 		this.goalBoxAngle = 0;
 		this.goalBoxSize = 0.4f;
-		this.goalColor = new Color(1, 0, 0, 1);
+		this.goalColor = new Color(1, 39f / 256, 96f / 256, 1);
 		this.obstacles = new Vector<Obstacle>();
 		for (int i = 0; i < this.mazeWidth - 1; i++) {
 			Point3D newPosition = new Point3D( i + 0.5f, 0, i + 0.5f);
@@ -107,6 +107,8 @@ public class Maze {
 
 		// Draw goal
 		shader.setMaterialDiffuse(this.goalColor);
+		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
+		shader.setShininess(3);
 		ModelMatrix.main.loadIdentityMatrix();
 		ModelMatrix.main.addTranslation(this.unit * (this.mazeWidth - 0.5f), this.unit * 0.5f, this.unit * (this.mazeDepth - 0.5f));
 		ModelMatrix.main.addScale(this.goalBoxSize, this.goalBoxSize, this.goalBoxSize);
