@@ -19,6 +19,7 @@ public class Maze {
 	private Color goalColor;
 	private Vector<Obstacle> obstacles;
 	private Texture texWall;
+	private Texture texGoal;
 
 	public Maze(int mazeWidth, int mazeDepth) {
 		this.mazeWidth = mazeWidth;
@@ -44,6 +45,7 @@ public class Maze {
 					new Color(0.5f, 0.8f, 0.7f, 1)));
 		}
 		this.texWall = new Texture(Gdx.files.internal("textures/drops.jpg"));
+		this.texGoal = new Texture(Gdx.files.internal("textures/drops.jpg"));
 	}
 
 	public void draw(boolean drawWalls, Shader3D shader) {
@@ -109,6 +111,7 @@ public class Maze {
 		shader.setMaterialDiffuse(this.goalColor);
 		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
 		shader.setShininess(3);
+		shader.setDiffuseTexture(this.texGoal);
 		ModelMatrix.main.loadIdentityMatrix();
 		ModelMatrix.main.addTranslation(this.unit * (this.mazeWidth - 0.5f), this.unit * 0.5f, this.unit * (this.mazeDepth - 0.5f));
 		ModelMatrix.main.addScale(this.goalBoxSize, this.goalBoxSize, this.goalBoxSize);
@@ -118,6 +121,7 @@ public class Maze {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		//BoxGraphic.drawSolidCube();
 		ModelGraphics.drawSolidModel();
+		shader.setDiffuseTexture(null);
 
 		// Draw obstacles
 		for (Obstacle obst: this.obstacles) {

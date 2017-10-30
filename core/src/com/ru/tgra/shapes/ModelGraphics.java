@@ -147,39 +147,17 @@ public class ModelGraphics {
 		normalBuffer.rewind();
 
 		//UV TEXTURE COORD ARRAY IS FILLED HERE
-		/*float[] uvArray = {0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
+		float[] uv = {
 				0, 0,
-				0, 1,
 				1, 0,
-				1, 1,
-
-				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
-				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
-				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
-				0, 0,
-				0, 1,
-				1, 0,
-				1, 1};
-
-		uvBuffer = BufferUtils.newFloatBuffer(48);
-		uvBuffer.put(uvArray);
-		uvBuffer.rewind();*/
+				0.5f, 1
+		};
+		int numUv = 2 * 72;
+		uvBuffer = BufferUtils.newFloatBuffer(numUv);
+		for (int i = 0; i < numUv; i += 6) {
+			uvBuffer.put(uv);
+		}
+		uvBuffer.rewind();
 
 		//INDEX ARRAY IS FILLED HERE
 		short[] indexArray = new short[72];
@@ -195,7 +173,7 @@ public class ModelGraphics {
 	public static void drawSolidModel() {
 		Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, normalBuffer);
-		//Gdx.gl.glVertexAttribPointer(uvPointer, 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+		Gdx.gl.glVertexAttribPointer(uvPointer, 2, GL20.GL_FLOAT, false, 0, uvBuffer);
 
 		Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, 72, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
