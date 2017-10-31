@@ -18,7 +18,6 @@ public class Maze {
 	private float goalBoxSize;
 	private Color goalColor;
 	private Vector<Obstacle> obstacles;
-	private Texture texWall;
 	private Texture texGoal;
 
 	public Maze(int mazeWidth, int mazeDepth) {
@@ -44,7 +43,6 @@ public class Maze {
 			obstacles.add(new Obstacle(newPosition, randWall.nextFloat() / 4f + 0.1f,
 					new Color(0.5f, 0.8f, 0.7f, 1)));
 		}
-		this.texWall = new Texture(Gdx.files.internal("textures/runes/joy.jpg"));
 		this.texGoal = new Texture(Gdx.files.internal("textures/drops.jpg"));
 	}
 
@@ -96,14 +94,13 @@ public class Maze {
 			}
 
 			// Draw inner walls
-			shader.setSpecularTexture(this.texWall);
-			for (Wall wall : this.innerWalls) {
+			Vector<Wall> allWalls = new Vector<Wall>();
+			allWalls.addAll(this.innerWalls);
+			allWalls.addAll(this.innerWallsToBe);
+			for (Wall wall : allWalls) {
+				shader.setSpecularTexture(wall.getTexture());
 				wall.draw(this.unit, shader);
 			}
-			for (Wall wall : this.innerWallsToBe) {
-				wall.draw(this.unit, shader);
-			}
-
 			shader.setSpecularTexture(null);
 		}
 
