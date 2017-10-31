@@ -111,8 +111,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		thirdPerson = ThirdPerson.createThirdPerson(mapCameraCenter.returnAddedVector(new Vector3D(-10, 10, 0)), mapCameraCenter);
 
-		lightPos1 = new Point3D(mazeWidth - 0.5f, 1, mazeDepth - 0.5f);
-		lightCol1 = new Color(1, 1, 1, 1);
+		lightPos1 = new Point3D(mazeWidth - 0.5f, 3f, mazeDepth - 0.5f);
+		lightCol1 = new Color(0.5f, 0.5f, 0.5f, 1);
 
 		opponentBullet = null;
 	}
