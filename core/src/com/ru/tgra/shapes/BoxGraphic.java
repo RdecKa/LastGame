@@ -23,136 +23,115 @@ public class BoxGraphic {
 		BoxGraphic.uvPointer= uvPointer;
 
 		//VERTEX ARRAY IS FILLED HERE
-		float[] vertexArray = {-0.5f, -0.5f, -0.5f,
-						-0.5f, 0.5f, -0.5f,
-						0.5f, 0.5f, -0.5f,
-						0.5f, -0.5f, -0.5f,
-						-0.5f, -0.5f, 0.5f,
-						-0.5f, 0.5f, 0.5f,
-						0.5f, 0.5f, 0.5f,
-						0.5f, -0.5f, 0.5f,
-						-0.5f, -0.5f, -0.5f,
-						0.5f, -0.5f, -0.5f,
-						0.5f, -0.5f, 0.5f,
-						-0.5f, -0.5f, 0.5f,
-						-0.5f, 0.5f, -0.5f,
-						0.5f, 0.5f, -0.5f,
-						0.5f, 0.5f, 0.5f,
-						-0.5f, 0.5f, 0.5f,
-						-0.5f, -0.5f, -0.5f,
-						-0.5f, -0.5f, 0.5f,
-						-0.5f, 0.5f, 0.5f,
-						-0.5f, 0.5f, -0.5f,
-						0.5f, -0.5f, -0.5f,
-						0.5f, -0.5f, 0.5f,
-						0.5f, 0.5f, 0.5f,
-						0.5f, 0.5f, -0.5f};
+		float[] vertexArray = {
+				-0.5f, -0.5f, -0.5f,
+				-0.5f, 0.5f, -0.5f,
+				0.5f, 0.5f, -0.5f,
+				0.5f, -0.5f, -0.5f,
+				-0.5f, -0.5f, 0.5f,
+				-0.5f, 0.5f, 0.5f,
+				0.5f, 0.5f, 0.5f,
+				0.5f, -0.5f, 0.5f,
+				-0.5f, -0.5f, -0.5f,
+				0.5f, -0.5f, -0.5f,
+				0.5f, -0.5f, 0.5f,
+				-0.5f, -0.5f, 0.5f,
+				-0.5f, 0.5f, -0.5f,
+				0.5f, 0.5f, -0.5f,
+				0.5f, 0.5f, 0.5f,
+				-0.5f, 0.5f, 0.5f,
+				-0.5f, -0.5f, -0.5f,
+				-0.5f, -0.5f, 0.5f,
+				-0.5f, 0.5f, 0.5f,
+				-0.5f, 0.5f, -0.5f,
+				0.5f, -0.5f, -0.5f,
+				0.5f, -0.5f, 0.5f,
+				0.5f, 0.5f, 0.5f,
+				0.5f, 0.5f, -0.5f
+		};
 
 		vertexBuffer = BufferUtils.newFloatBuffer(72);
 		vertexBuffer.put(vertexArray);
 		vertexBuffer.rewind();
 
 		//NORMAL ARRAY IS FILLED HERE
-		float[] normalArray = {0.0f, 0.0f, -1.0f,
-							0.0f, 0.0f, -1.0f,
-							0.0f, 0.0f, -1.0f,
-							0.0f, 0.0f, -1.0f,
-							0.0f, 0.0f, 1.0f,
-							0.0f, 0.0f, 1.0f,
-							0.0f, 0.0f, 1.0f,
-							0.0f, 0.0f, 1.0f,
-							0.0f, -1.0f, 0.0f,
-							0.0f, -1.0f, 0.0f,
-							0.0f, -1.0f, 0.0f,
-							0.0f, -1.0f, 0.0f,
-							0.0f, 1.0f, 0.0f,
-							0.0f, 1.0f, 0.0f,
-							0.0f, 1.0f, 0.0f,
-							0.0f, 1.0f, 0.0f,
-							-1.0f, 0.0f, 0.0f,
-							-1.0f, 0.0f, 0.0f,
-							-1.0f, 0.0f, 0.0f,
-							-1.0f, 0.0f, 0.0f,
-							1.0f, 0.0f, 0.0f,
-							1.0f, 0.0f, 0.0f,
-							1.0f, 0.0f, 0.0f,
-							1.0f, 0.0f, 0.0f};
+		float[] normalArray = {
+				0.0f, 0.0f, -1.0f,
+				0.0f, 0.0f, -1.0f,
+				0.0f, 0.0f, -1.0f,
+				0.0f, 0.0f, -1.0f,
+				0.0f, 0.0f, 1.0f,
+				0.0f, 0.0f, 1.0f,
+				0.0f, 0.0f, 1.0f,
+				0.0f, 0.0f, 1.0f,
+				0.0f, -1.0f, 0.0f,
+				0.0f, -1.0f, 0.0f,
+				0.0f, -1.0f, 0.0f,
+				0.0f, -1.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				-1.0f, 0.0f, 0.0f,
+				-1.0f, 0.0f, 0.0f,
+				-1.0f, 0.0f, 0.0f,
+				-1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f, 0.0f
+		};
 
 		normalBuffer = BufferUtils.newFloatBuffer(72);
 		normalBuffer.put(normalArray);
 		normalBuffer.rewind();
 
 		//UV TEXTURE COORD ARRAY IS FILLED HERE
-		/*float[] uvArray = {0.3333f, 0.3333f,
-				0.6666f, 0.3333f,
-				0.6666f, 0.6666f,
-				0.3333f, 0.6666f,
-
-				0.6666f, 0.6666f,
-				1.0f, 0.6666f,
-				1.0f, 1.0f,
-				0.6666f, 1.0f,
-
-				0.0f, 0.3333f,
-				1.0f, 0.3333f,
-				1.0f, 0.6666f,
-				0.0f, 0.6666f,
-
-				0.6666f, 0.3333f,
-				1.0f, 0.3333f,
-				1.0f, 0.6666f,
-				0.6666f, 0.6666f,
-
-				0.0f, 0.0f,
-				2.0f, 0.0f,
-				2.0f, 2.0f,
-				0.0f, 2.0f,
-
-				0.0f, 1.0f,
-				1.0f, 1.0f,
-				1.0f, 0.0f,
-				0.0f, 0.0f};*/
-		float[] uvArray = {0, 0,
+		float[] uvArray = {
+				1, 1,
+				1, 0,
+				0, 0,
 				0, 1,
+
+				0, 1,
+				0, 0,
 				1, 0,
 				1, 1,
 
 				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
+				0, 0,
+				0, 0,
+				0, 0,
 
 				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
 				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
 				0, 0,
-				0, 1,
-				1, 0,
-				1, 1,
-
 				0, 0,
+
 				0, 1,
+				1, 1,
 				1, 0,
-				1, 1};
+				0, 0,
+
+				1, 1,
+				0, 1,
+				0, 0,
+				1, 0,
+		};
 
 		uvBuffer = BufferUtils.newFloatBuffer(48);
 		uvBuffer.put(uvArray);
 		uvBuffer.rewind();
 
 		//INDEX ARRAY IS FILLED HERE
-		short[] indexArray = {0, 1, 2, 0, 2, 3,
+		short[] indexArray = {
+				0, 1, 2, 0, 2, 3,
 				4, 5, 6, 4, 6, 7,
 				8, 9, 10, 8, 10, 11,
 				12, 13, 14, 12, 14, 15,
 				16, 17, 18, 16, 18, 19,
-				20, 21, 22, 20, 22, 23};
+				20, 21, 22, 20, 22, 23
+		};
 
 		indexBuffer = BufferUtils.newShortBuffer(36);
 		indexBuffer.put(indexArray);

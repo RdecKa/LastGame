@@ -44,7 +44,7 @@ public class Maze {
 			obstacles.add(new Obstacle(newPosition, randWall.nextFloat() / 4f + 0.1f,
 					new Color(0.5f, 0.8f, 0.7f, 1)));
 		}
-		this.texWall = new Texture(Gdx.files.internal("textures/drops.jpg"));
+		this.texWall = new Texture(Gdx.files.internal("textures/runes/joy.jpg"));
 		this.texGoal = new Texture(Gdx.files.internal("textures/drops.jpg"));
 	}
 
@@ -65,7 +65,6 @@ public class Maze {
 		if (drawWalls) {
 			// Draw outer walls
 			shader.setMaterialDiffuse(this.wallColor);
-			shader.setSpecularTexture(this.texWall);
 
 			for (int i = 0; i < 4; i++) {
 				ModelMatrix.main.loadIdentityMatrix();
@@ -97,6 +96,7 @@ public class Maze {
 			}
 
 			// Draw inner walls
+			shader.setSpecularTexture(this.texWall);
 			for (Wall wall : this.innerWalls) {
 				wall.draw(this.unit, shader);
 			}
