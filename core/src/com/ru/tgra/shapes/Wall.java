@@ -10,23 +10,25 @@ public class Wall {
 	private boolean parallelToX;
 	private float centerX, centerZ; // Central point of the wall
 	private Texture texture;
-	private static Random rand = new Random();
-	private static Texture[] possibleTextures = {
-			new Texture(Gdx.files.internal("textures/runes/day2.jpg")),
-			new Texture(Gdx.files.internal("textures/runes/journey2.jpg")),
-			new Texture(Gdx.files.internal("textures/runes/joy2.jpg")),
-			new Texture(Gdx.files.internal("textures/runes/sun2.jpg")),
-			new Texture(Gdx.files.internal("textures/runes/wealth2.jpg"))
-	};
 
-	public Wall(float width, float length, boolean parallelToX, float centerX, float centerZ) {
+	public Wall(float width, float length, boolean parallelToX, float centerX, float centerZ, Texture tex) {
 		this.wallWidth = width;
 		this.wallLength = length;
 		this.wallHeight = 0;
 		this.parallelToX = parallelToX;
 		this.centerX = centerX;
 		this.centerZ = centerZ;
-		this.texture = (rand.nextFloat() < 0.25f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null);
+		this.texture = tex;
+	}
+
+	public Wall (float width, float length, boolean parallelToX, float centerX, float centerZ) {
+		this.wallWidth = width;
+		this.wallLength = length;
+		this.wallHeight = 0;
+		this.parallelToX = parallelToX;
+		this.centerX = centerX;
+		this.centerZ = centerZ;
+		this.texture = null;
 	}
 
 	public void draw(int unit, Shader3D shader) {

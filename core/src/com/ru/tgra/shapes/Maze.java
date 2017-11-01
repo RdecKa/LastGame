@@ -237,6 +237,13 @@ class Cell {
 	private int posX, posZ;
 	private int unit;
 	private float wallWidth;
+	private static Texture[] possibleTextures = {
+			new Texture(Gdx.files.internal("textures/runes/day2.jpg")),
+			new Texture(Gdx.files.internal("textures/runes/journey2.jpg")),
+			new Texture(Gdx.files.internal("textures/runes/joy2.jpg")),
+			new Texture(Gdx.files.internal("textures/runes/sun2.jpg")),
+			new Texture(Gdx.files.internal("textures/runes/wealth2.jpg"))
+	};
 
 	public Cell(int x, int z, int unit, boolean northRow, boolean eastRow) {
 		this.floorColor = new Color();
@@ -257,11 +264,15 @@ class Cell {
 
 	public Wall addNorthWall() {
 		this.northWall = true;
-		return new Wall(this.unit * this.wallWidth, this.unit, true,(this.posX + 0.5f) * this.unit, (this.posZ + 1) * this.unit);
+		return new Wall(this.unit * this.wallWidth, this.unit, true,
+				(this.posX + 0.5f) * this.unit, (this.posZ + 1) * this.unit,
+				(rand.nextFloat() < 0.25f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null));
 	}
 	public Wall addEastWall() {
 		this.eastWall = true;
-		return new Wall(this.unit * this.wallWidth, this.unit, false,(this.posX + 1) * this.unit, (this.posZ + 0.5f) * this.unit);
+		return new Wall(this.unit * this.wallWidth, this.unit, false,
+				(this.posX + 1) * this.unit, (this.posZ + 0.5f) * this.unit,
+				(rand.nextFloat() < 0.25f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null));
 	}
 
 	// Returns true if wall was added, false otherwise

@@ -119,7 +119,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	private void input(float deltaTime)
 	{
-		if (firstPersonView) {
+		if (firstPersonView && !winAnimation && !victoryAnimation && !killAnimation) {
 			if (opponent != null) {
 				moveFor = new Vector3D(0, 0, 0);
 				if (Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -154,7 +154,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 					lookDown.y = -4;
 				}
 			}
-		} else {
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+				if (this.bullets.size() < 1)
+					bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(lookDown), maze));
+			}
+		} else if (!firstPersonView) {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				thirdPerson.position.rotateAroundPoint(mapCenter, 100 * deltaTime);
 			}
@@ -180,10 +184,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			killed = true;
 			pointsInd.addPoint(false);
 			client.announceVictory(false);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			if (this.bullets.size() < 1)
-				bullets.add(new Bullet(0.04f, new Color(0.5f, 0.5f, 0.5f, 1), player.position.returnAddedVector(new Vector3D(0, 0.4f, 0)), player.getAim(lookDown), maze));
 		}
 	}
 	
