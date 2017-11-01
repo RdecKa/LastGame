@@ -215,7 +215,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		if (firstPersonView) {
 			if (!victoryAnimation) {
-				win = player.move(moveFor, maze);
+				win = player.move(moveFor, maze, opponent);
 				if (win)
 					client.announceVictory(true);
 				winAnimation = win;
@@ -227,7 +227,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			Point3D center = playerImaginaryPosition.returnAddedVector(player.direction).returnAddedVector(lookDown);
 			perspCamera.Look3D(playerImaginaryPosition, center, up);
 		} else {
-			player.move(new Vector3D(0, 0, 0), maze);
+			player.move(new Vector3D(0, 0, 0), maze, opponent);
 			Point3D mapCenter = new Point3D(mazeWidth / 2, 1, mazeDepth / 2);
 			perspCamera.Look3D(thirdPerson.position, mapCenter, new Vector3D(0, 1, 0));
 		}

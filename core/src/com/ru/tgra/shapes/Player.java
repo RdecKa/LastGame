@@ -40,7 +40,7 @@ public class Player {
 		SphereGraphic.drawSolidSphere();
 	}
 
-	public boolean move(Vector3D moveForOrig, Maze maze) {
+	public boolean move(Vector3D moveForOrig, Maze maze, Player opponent) {
 		Vector3D moveFor = moveForOrig.clone();
 		int currentX = (int) this.position.x;
 		int currentZ = (int) this.position.z;
@@ -58,6 +58,16 @@ public class Player {
 			float diff = obst.getPosition().getDistanceTo(wantToGo) - obst.getRadius() - this.radius;
 			if (diff < 0) {
 				Vector3D ballWant = Vector3D.difference(wantToGo, obst.getPosition());
+				Vector3D changeDirection = ballWant.returnNormalized().returnScaled(-diff);
+				moveFor.add(changeDirection);
+			}
+		}
+
+		// Check hitting opponent
+		if (opponent != null) {
+			float diff = opponent.position.getDistanceTo(wantToGo) - opponent.radius - this.radius;
+			if (diff < 0) {
+				Vector3D ballWant = Vector3D.difference(wantToGo, opponent.position);
 				Vector3D changeDirection = ballWant.returnNormalized().returnScaled(-diff);
 				moveFor.add(changeDirection);
 			}
