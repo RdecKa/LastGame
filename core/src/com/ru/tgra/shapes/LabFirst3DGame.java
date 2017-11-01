@@ -326,7 +326,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		maze.draw(true, shader);
 
-		player.draw(shader, false);
+		player.draw(shader, !firstPersonView);
 
 		if (opponent != null)
 			opponent.draw(shader, true);
@@ -360,8 +360,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		shader.setGlobalAmbient(new Color(1, 1, 1, 1));
 
-		//maze.draw(false, shader);
-		//player.draw(shader);
 		pointsInd.draw(shader);
 	}
 
