@@ -18,7 +18,7 @@ public class Player {
 		this.angleAnimation = 0;
 	}
 
-	public void draw(Shader3D shader) {
+	public void draw(Shader3D shader, boolean drawHead) {
 		shader.setMaterialDiffuse(this.color);
 		shader.setMaterialSpecular(new Color(1, 1, 1, 1));
 		shader.setShininess(20);
@@ -29,15 +29,17 @@ public class Player {
 		SphereGraphic.drawSolidSphere();
 
 		// Draw head
-		shader.setMaterialDiffuse(headColor);
-		Point3D headPos = this.position.clone();
-		headPos.add(this.direction.returnScaled(0.15f));
-		headPos.y += this.radius * 0.8f;
-		ModelMatrix.main.loadIdentityMatrix();
-		ModelMatrix.main.addTranslation(headPos.x, headPos.y, headPos.z);
-		ModelMatrix.main.addScale(this.radius / 3f, this.radius / 3f, this.radius / 3f);
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawSolidSphere();
+		if (drawHead) {
+			shader.setMaterialDiffuse(headColor);
+			Point3D headPos = this.position.clone();
+			headPos.add(this.direction.returnScaled(0.15f));
+			headPos.y += this.radius * 0.8f;
+			ModelMatrix.main.loadIdentityMatrix();
+			ModelMatrix.main.addTranslation(headPos.x, headPos.y, headPos.z);
+			ModelMatrix.main.addScale(this.radius / 3f, this.radius / 3f, this.radius / 3f);
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			SphereGraphic.drawSolidSphere();
+		}
 	}
 
 	public boolean move(Vector3D moveForOrig, Maze maze, Player opponent) {

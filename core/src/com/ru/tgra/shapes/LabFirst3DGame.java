@@ -326,11 +326,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		maze.draw(true, shader);
 
-		if (!firstPersonView)
-			player.draw(shader);
+		player.draw(shader, false);
 
 		if (opponent != null)
-			opponent.draw(shader);
+			opponent.draw(shader, true);
 
 		for (Bullet bullet: this.bullets) {
 			bullet.draw(shader);
