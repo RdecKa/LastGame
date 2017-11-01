@@ -317,12 +317,16 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		shader.setLightPosition(lightPos1);
 		shader.setLightPosColor(new Color(1, 0.3f, 0.3f, 1));
 
-		perspCamera.setPerspectiveProjection(fovProjection, 1, 0.1f, 100);
+		perspCamera.setPerspectiveProjection(fovProjection, 1, 0.1f, 30);
 		shader.setViewMatrix(perspCamera.getViewMatrix());
 		shader.setProjectionMatrix(perspCamera.getProjectionMatrix());
 		shader.setEyePosition(perspCamera.getEye());
 
 		shader.setGlobalAmbient(new Color(0.3f, 0.3f, 0.3f, 1));
+		if (firstPersonView)
+			shader.setFog(new Color(0, 0, 0, 1), 2, 7);
+		else
+			shader.setFog(new Color(0.5f, 0.5f, 0.5f, 1), 10, 100);
 
 		maze.draw(true, shader);
 

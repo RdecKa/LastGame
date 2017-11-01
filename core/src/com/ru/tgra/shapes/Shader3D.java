@@ -38,6 +38,10 @@ public class Shader3D {
 	public static int usesSpecularTexLoc;
 	public static int specularTextureLoc;
 
+	public static int fogColorLoc;
+	public static int fogStartLoc;
+	public static int fogEndLoc;
+
 	public Shader3D() {
 		String vertexShaderString;
 		String fragmentShaderString;
@@ -94,6 +98,10 @@ public class Shader3D {
 		usesSpecularTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesSpecularTexture");
 		diffuseTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
 		specularTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_specularTexture");
+
+		fogColorLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogColor");
+		fogStartLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogStart");
+		fogEndLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogEnd");
 
 		Gdx.gl.glUseProgram(renderingProgramID);
 	}
@@ -180,5 +188,11 @@ public class Shader3D {
 			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
 			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
 		}
+	}
+
+	public void setFog(Color c, float fogStart, float fogEnd) {
+		Gdx.gl.glUniform4f(fogColorLoc, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+		Gdx.gl.glUniform1f(fogStartLoc, fogStart);
+		Gdx.gl.glUniform1f(fogEndLoc, fogEnd);
 	}
 }

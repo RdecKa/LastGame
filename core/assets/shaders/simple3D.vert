@@ -22,6 +22,7 @@ varying vec4 v_sDir;
 varying vec4 v_hDir;
 varying vec4 v_sPos;
 varying vec4 v_hPos;
+varying float v_distance;
 
 void main()
 {
@@ -36,6 +37,7 @@ void main()
 
 	v_normal = normal;
 	vec4 v = u_eyePosition - position; // Direction to the camera
+	v_distance = length(v);
 
 
 	// Directional light
