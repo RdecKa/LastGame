@@ -114,7 +114,7 @@ public class Player {
 		int newX = (int) this.position.x;
 		int newZ = (int) this.position.z;
 		if (currentX != newX || currentZ != newZ) {
-			maze.addRandomWalls(LabFirst3DGame.numWallsAtOnce, newX, newZ);
+			maze.addRandomWalls(LabFirst3DGame.numWallsAtOnce, this, opponent);
 		}
 
 		return false;

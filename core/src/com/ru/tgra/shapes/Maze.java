@@ -145,17 +145,35 @@ public class Maze {
 		}
 	}
 
-	private void addRandomWall(int curX, int curZ) {
+	private void addRandomWall(Player player, Player opponent) {
+		int curX = (int) player.position.x;
+		int curZ = (int) player.position.z;
+		int opX = (int) opponent.position.x;
+		int opZ = (int) opponent.position.z;
 		Wall newWall = null;
 		int safetyCounter = this.mazeDepth * this.mazeWidth * 10;
-		int forbidden[][] = new int[7][2];
-		forbidden[0][0] = this.mazeWidth - 2; forbidden[0][1] = this.mazeDepth - 1;
-		forbidden[1][0] = this.mazeWidth - 1; forbidden[1][1] = this.mazeDepth - 2;
-		forbidden[2][0] = curX; forbidden[2][1] = curZ;
-		forbidden[3][0] = curX; forbidden[3][1] = curZ - 1;
-		forbidden[4][0] = curX; forbidden[4][1] = curZ + 1;
-		forbidden[5][0] = curX - 1; forbidden[5][1] = curZ;
-		forbidden[6][0] = curX + 1; forbidden[6][1] = curZ;
+		int forbidden[][] = {
+				{this.mazeWidth - 2, this.mazeDepth - 1},
+				{this.mazeWidth - 1, this.mazeDepth - 2},
+				{curX - 1, curZ - 1},
+				{curX - 1, curZ},
+				{curX - 1, curZ + 1},
+				{curX, curZ - 1},
+				{curX, curZ},
+				{curX, curZ + 1},
+				{curX + 1, curZ - 1},
+				{curX + 1, curZ},
+				{curX + 1, curZ + 1},
+				{opX - 1, opZ - 1},
+				{opX - 1, opZ},
+				{opX - 1, opZ + 1},
+				{opX, opZ - 1},
+				{opX, opZ},
+				{opX, opZ + 1},
+				{opX + 1, opZ - 1},
+				{opX + 1, opZ},
+				{opX + 1, opZ + 1}
+		};
 		while (newWall == null && safetyCounter > 0) {
 			int z = rand.nextInt(this.mazeDepth);
 			int x = rand.nextInt(this.mazeWidth);
@@ -165,9 +183,10 @@ public class Maze {
 			newWall = maze[z][x].addWall();
 			safetyCounter--;
 		}
-		if (newWall != null)
+		if (newWall != null) {
 			this.innerWallsToBe.add(newWall);
 			LabFirst3DGame.client.sendToServer(newWall);
+		}
 	}
 
 	private boolean isAllowed(int x, int z, int[][] forbidden) {
@@ -178,9 +197,9 @@ public class Maze {
 		return true;
 	}
 
-	public void addRandomWalls(int n, int curX, int curZ) {
+	public void addRandomWalls(int n, Player player, Player opponent) {
 		for (int i = 0; i < n; i++)
-			this.addRandomWall(curX, curZ);
+			this.addRandomWall(player, opponent);
 	}
 
 	public void addWall(Wall wall) {
