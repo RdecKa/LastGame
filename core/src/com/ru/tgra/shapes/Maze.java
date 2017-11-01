@@ -20,6 +20,7 @@ public class Maze {
 	private Color goalColor;
 	private Vector<Obstacle> obstacles;
 	private Texture texGoal;
+	private boolean increasingTransparency;
 
 	public Maze(int mazeWidth, int mazeDepth) {
 		this.mazeWidth = mazeWidth;
@@ -37,6 +38,7 @@ public class Maze {
 		this.wallWidth = 0.1f;
 		this.goalBoxAngle = 0;
 		this.goalBoxSize = 0.4f;
+		this.increasingTransparency = true;
 		this.goalColor = new Color(1, 39f / 256, 96f / 256, 0.4f);
 		this.obstacles = new Vector<Obstacle>();
 		for (int i = 0; i < this.mazeWidth - 1; i++) {
@@ -215,6 +217,20 @@ public class Maze {
 	public void incrementAngle(float angle) {
 		this.goalBoxAngle += angle;
 		this.goalBoxAngle %= 360;
+	}
+
+	public void changeTransparencyOfGoal(float delta) {
+		if (this.increasingTransparency) {
+			this.goalColor.changeTransparency(delta);
+			if (this.goalColor.getAlpha() > 0.8f) {
+				this.increasingTransparency = false;
+			}
+		} else {
+			this.goalColor.changeTransparency(-delta);
+			if (this.goalColor.getAlpha() < 0.2f) {
+				this.increasingTransparency = true;
+			}
+		}
 	}
 
 	// Returns false when box has disappeared

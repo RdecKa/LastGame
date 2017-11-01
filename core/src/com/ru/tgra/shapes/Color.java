@@ -29,6 +29,10 @@ public class Color {
 		return c;
 	}
 
+	public void changeTransparency(float delta) {
+		this.alpha += delta;
+	}
+
 	public float getRed() { return red; }
 	public float getGreen() { return green; }
 	public float getBlue() { return blue; }
