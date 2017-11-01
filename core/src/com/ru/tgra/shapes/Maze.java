@@ -1,6 +1,7 @@
 package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
@@ -36,7 +37,7 @@ public class Maze {
 		this.wallWidth = 0.1f;
 		this.goalBoxAngle = 0;
 		this.goalBoxSize = 0.4f;
-		this.goalColor = new Color(1, 39f / 256, 96f / 256, 1);
+		this.goalColor = new Color(1, 39f / 256, 96f / 256, 0.4f);
 		this.obstacles = new Vector<Obstacle>();
 		for (int i = 0; i < this.mazeWidth - 1; i++) {
 			Point3D newPosition = new Point3D( i + 0.5f, 0, i + 0.5f);
@@ -105,10 +106,26 @@ public class Maze {
 		}
 
 		// Draw goal
+
+		// Draw inner star
 		shader.setMaterialDiffuse(this.goalColor);
-		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
-		shader.setShininess(3);
+		ModelMatrix.main.loadIdentityMatrix();
+		ModelMatrix.main.addTranslation(this.unit * (this.mazeWidth - 0.5f), this.unit * 0.5f, this.unit * (this.mazeDepth - 0.5f));
+		ModelMatrix.main.addScale(this.goalBoxSize * 0.8f, this.goalBoxSize * 0.8f, this.goalBoxSize * 0.8f);
+		ModelMatrix.main.addRotationZ(this.goalBoxAngle);
+		ModelMatrix.main.addRotationX(this.goalBoxAngle);
+		ModelMatrix.main.addRotationY(this.goalBoxAngle);
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		shader.setDiffuseTexture(this.texGoal);
+		ModelGraphics.drawSolidModel();
+
+		// Draw outer, transparent star
+		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
+		shader.setShininess(30);
+		shader.setDiffuseTexture(null);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+
 		ModelMatrix.main.loadIdentityMatrix();
 		ModelMatrix.main.addTranslation(this.unit * (this.mazeWidth - 0.5f), this.unit * 0.5f, this.unit * (this.mazeDepth - 0.5f));
 		ModelMatrix.main.addScale(this.goalBoxSize, this.goalBoxSize, this.goalBoxSize);
@@ -116,9 +133,9 @@ public class Maze {
 		ModelMatrix.main.addRotationX(this.goalBoxAngle);
 		ModelMatrix.main.addRotationY(this.goalBoxAngle);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		//BoxGraphic.drawSolidCube();
 		ModelGraphics.drawSolidModel();
-		shader.setDiffuseTexture(null);
+
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 
 		// Draw obstacles
 		for (Obstacle obst: this.obstacles) {

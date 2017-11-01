@@ -58,4 +58,5 @@ void main()
     vec4 lightPos = diffuseColorPos + specularColorPos;
 
 	gl_FragColor = globalAmbient * materialDiffuse + lightDir + lightPos;
+	gl_FragColor.a = u_materialDiffuse.a;
 }

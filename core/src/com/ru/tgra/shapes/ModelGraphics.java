@@ -40,6 +40,11 @@ public class ModelGraphics {
 		int numVert = 3 * 72;
 
 		float[][] vertices = {
+				v_tlb, v_blb, v_center_back,
+				v_blb, v_brb, v_center_back,
+				v_brb, v_trb, v_center_back,
+				v_trb, v_tlb, v_center_back,
+
 				v_tlf, v_trf, v_center_top,
 				v_trf, v_trb, v_center_top,
 				v_trb, v_tlb, v_center_top,
@@ -63,12 +68,7 @@ public class ModelGraphics {
 				v_tlf, v_blf, v_center_front,
 				v_blf, v_brf, v_center_front,
 				v_brf, v_trf, v_center_front,
-				v_trf, v_tlf, v_center_front,
-
-				v_tlb, v_blb, v_center_back,
-				v_blb, v_brb, v_center_back,
-				v_brb, v_trb, v_center_back,
-				v_trb, v_tlb, v_center_back,
+				v_trf, v_tlf, v_center_front
 		};
 
 		vertexBuffer = BufferUtils.newFloatBuffer(numVert);
@@ -109,6 +109,11 @@ public class ModelGraphics {
 		float[] n_br = {2, 0, -1};
 
 		float[][] normals = {
+				n_bl, n_bl, n_bl,
+				n_bh, n_bh, n_bh,
+				n_br, n_br, n_br,
+				n_bt, n_bt, n_bt,
+
 				n_tf, n_tf, n_tf,
 				n_tr, n_tr, n_tr,
 				n_tb, n_tb, n_tb,
@@ -132,12 +137,7 @@ public class ModelGraphics {
 				n_fl, n_fl, n_fl,
 				n_fh, n_fh, n_fh,
 				n_fr, n_fr, n_fr,
-				n_ft, n_ft, n_ft,
-
-				n_bl, n_bl, n_bl,
-				n_bh, n_bh, n_bh,
-				n_br, n_br, n_br,
-				n_bt, n_bt, n_bt
+				n_ft, n_ft, n_ft
 		};
 
 		normalBuffer = BufferUtils.newFloatBuffer(numVert);
