@@ -29,6 +29,7 @@ public class Shader3D {
 	public static int matDiffLoc;
 	public static int matSpecLoc;
 	public static int matShinLoc;
+	public static int matEmisLoc;
 
 	public static boolean usesDiffuseTexture;
 	public static int usesDiffuseTexLoc;
@@ -93,6 +94,7 @@ public class Shader3D {
 		matDiffLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
 		matSpecLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
 		matShinLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
+		matEmisLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialEmission");
 
 		usesDiffuseTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
 		usesSpecularTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesSpecularTexture");
@@ -132,6 +134,10 @@ public class Shader3D {
 
 	public void setMaterialSpecular(Color c) {
 		Gdx.gl.glUniform4f(matSpecLoc, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+	}
+
+	public void setMaterialEmission(Color c) {
+		Gdx.gl.glUniform4f(matEmisLoc, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 	}
 
 	public void setShininess(float shine) {

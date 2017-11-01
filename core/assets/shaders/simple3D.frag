@@ -17,6 +17,7 @@ uniform vec4 u_lightColorDir;
 uniform vec4 u_materialDiffuse;
 uniform vec4 u_materialSpecular;
 uniform float u_materialShininess;
+uniform vec4 u_materialEmission;
 
 uniform vec4 u_fogColor;
 uniform float u_fogStart;
@@ -71,6 +72,6 @@ void main()
     vec4 specularColorPos = pow(phong, u_materialShininess) * u_lightColorPos * materialSpecular;
     vec4 lightPos = diffuseColorPos + specularColorPos;
 
-	gl_FragColor = globalAmbient * materialDiffuse + lightDir + lightPos;
-	gl_FragColor.a = u_materialDiffuse.a;
+	gl_FragColor = globalAmbient * materialDiffuse + lightDir + lightPos + u_materialEmission;
+	gl_FragColor.a = u_materialDiffuse.a * u_materialEmission.a;
 }

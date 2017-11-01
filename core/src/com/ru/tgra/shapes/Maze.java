@@ -125,6 +125,7 @@ public class Maze {
 		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
 		shader.setShininess(30);
 		shader.setDiffuseTexture(null);
+		shader.setMaterialEmission(this.goalColor);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 
@@ -137,6 +138,7 @@ public class Maze {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		ModelGraphics.drawSolidModel();
 
+		shader.setMaterialEmission(new Color(0, 0, 0, 1));
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
 		// Draw obstacles
@@ -241,7 +243,7 @@ public class Maze {
 	public void changeTransparencyOfGoal(float delta) {
 		if (this.increasingTransparency) {
 			this.goalColor.changeTransparency(delta);
-			if (this.goalColor.getAlpha() > 0.8f) {
+			if (this.goalColor.getAlpha() > 0.5f) {
 				this.increasingTransparency = false;
 			}
 		} else {
