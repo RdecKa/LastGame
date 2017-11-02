@@ -1,9 +1,9 @@
 # ThirdGame
-Assignment #3 for Computer Graphics (Reykjavik University)  
-Karin Frlic, October 2017
+Assignment #5 for Computer Graphics (Reykjavik University)  
+Karin Frlic, November 2017
 
 ## Aim of the Game
-Get to the box.
+Get to the star before your opponent does.
 
 ## How to play
 * Press **V** to switch between first and third person view.
@@ -12,6 +12,7 @@ Get to the box.
 ### First Person View
 * Use **WASD** to *move* around.
 * Use **arrow keys** to *look* around.
+* Press **SPACE** to shoot.
 
 ### Third Person View
 * Use **arrow keys** to zoom in/out and move around the maze.
