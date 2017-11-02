@@ -245,7 +245,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		}
 		this.bullets.removeAll(bulletsToBeRemoved);
 
-		if (victoryAnimation) {
+		if (victoryAnimation || winAnimation || killAnimation) {
 			return;
 		}
 
