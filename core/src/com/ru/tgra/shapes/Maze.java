@@ -125,7 +125,9 @@ public class Maze {
 		// Draw outer, transparent star
 		shader.setShininess(30);
 		shader.setDiffuseTexture(null);
-		shader.setMaterialEmission(this.goalColor);
+		Color emission = this.goalColor.clone();
+		emission.changeTransparency(0.5f - this.goalColor.getAlpha());
+		shader.setMaterialEmission(emission);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 
