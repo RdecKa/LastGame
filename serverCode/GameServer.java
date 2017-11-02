@@ -88,7 +88,6 @@ public class GameServer {
 		}
 		if (!success) {
 			Message err = new Message("system", msg_send.sender(), new Date(), "no client with nickname '" + msg_send.receiver() + "'");
-			//sendPrivateMessage(err);
 		}
 	}
 
@@ -98,7 +97,6 @@ public class GameServer {
 
 	public void addNickname(User user, String nickname) {
 		user.setNickname(nickname);
-		System.out.println("set: " + nickname);
 	}
 }
 
@@ -126,7 +124,6 @@ class GameServerConnector extends Thread {
 
 		Message init;
 		try {
-			//init = (Message)in.readObject();
 			String nn = (String)in.readObject();
 			init = Message.stringToMessage(nn);
 			this.user.setNickname(init.sender());
@@ -144,16 +141,13 @@ class GameServerConnector extends Thread {
 			    String msg = (String)m;
 				msg_received = Message.stringToMessage(msg);
 			} catch (Exception e) {
-				System.err.println("[system] there was a problem while reading message client on port " + socket.getPort());
-				e.printStackTrace(System.err);
+				System.err.println("[system] there was a problem while reading message from client on port " + socket.getPort() + ". Perhaps the player left the game.");
 				this.server.removeClient(this.user);
 				return;
 			}
 
 			if (msg_received.text().length() == 0) // invalid message
 				continue;
-			//if (msg_received.text().split("kkk")[0].equals("defeat"))
-			//	System.out.println("[new data] [" + msg_received.sender() + "] : " + msg_received.text() + msg_received.time()); // print the incoming message in the console
 
 			Message msg_send = msg_received;
 			try {

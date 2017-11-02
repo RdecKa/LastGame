@@ -29,16 +29,10 @@ public class GameClient extends Thread
 
 	public GameClient() throws Exception {
 		// connect to the chat server
-		BufferedReader std_in = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			System.out.println("[system] connecting to the server ...");
-			boolean nick_ok = false;
-			while (!nick_ok) {
-				//nickname = std_in.readLine();
-				nickname = "user_" + Integer.toString(rand.nextInt(1000000));
-				nick_ok = checkNickname(nickname);
-			}
 			socket = new Socket("localhost", serverPort); // create socket connection
+			nickname = "user_" + Integer.toString(rand.nextInt(1000000));
 			out = new ObjectOutputStream(socket.getOutputStream()); // create output stream for sending messages
 			in = new ObjectInputStream(socket.getInputStream()); // create input stream for listening for incoming messages
 			Message con = new Message(nickname, "__server__", new Date(), "init");
@@ -60,20 +54,6 @@ public class GameClient extends Thread
 		socket.close();*/
 	}
 
-	private boolean checkNickname(String nickname) {
-		if (nickname.equals("")) {
-			System.out.println("[system] enter at least one character");
-			return false;
-		}
-		for (int i = 0; i < nickname.length(); i++) {
-			if (nickname.charAt(i) == '*') {
-				System.out.println("[system] do not use '*' in your nickname");
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private void sendMessage(Message message, ObjectOutputStream out) {
 		try {
 			out.writeObject(message.messageToString()); // Send the message to the chat server
@@ -86,7 +66,6 @@ public class GameClient extends Thread
 
 	public void sendToServer(Point3D playerPosition, Vector3D playerDirection) {
 		// read from STDIN and send messages to the chat server
-		//String userInput = position.toString();
 		PackageState p = new PackageState(playerPosition, playerDirection);
 		sendPackage(p);
 	}
@@ -115,25 +94,7 @@ public class GameClient extends Thread
 		String userInput = p.toStringToSend();
 		String receiver = "__server__";
 		Date time;
-		String text = "";
-		if (userInput.charAt(0) == '*') {
-			// private
-			int i = 1;
-			while (i < userInput.length() && userInput.charAt(i) != '*') {
-				i++;
-			}
-			if (i == userInput.length()) {
-				// '*something ...'
-				System.out.println("[system] invalid receiver name");
-			} else {
-				// '*name*text'
-				receiver = userInput.substring(1, i);
-				text = userInput.substring(i + 1, userInput.length());
-			}
-		} else {
-			// "broadcast"
-			text = userInput;
-		}
+		String text = userInput;
 		time = new Date();
 		Message message = new Message(nickname, receiver, time, text);
 
