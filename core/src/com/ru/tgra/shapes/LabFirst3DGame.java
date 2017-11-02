@@ -75,7 +75,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				break;
 			}
 			default: {
-				mazeWidth = 11 + (level % 4);
+				mazeWidth = 13;
 			}
 		}
 		mazeDepth = mazeWidth;
@@ -216,7 +216,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if (firstPersonView) {
 			if (!victoryAnimation) {
 				win = player.move(moveFor, maze, opponent);
-				if (win)
+				if (win && !winAnimation && !killAnimation)
 					client.announceVictory(true);
 				winAnimation = win;
 				fovProjection = 60;

@@ -209,9 +209,13 @@ public class Maze {
 	public void addWall(Wall wall) {
 		this.innerWallsToBe.add(wall);
 		if (wall.isParallelToX())
-			this.maze[wall.getZ() - 1][wall.getX()].addNorthWall();
+			try {
+				this.maze[wall.getZ() - 1][wall.getX()].addNorthWall();
+			} catch (Exception e) {}
 		else
-			this.maze[wall.getZ()][wall.getX() - 1].addEastWall();
+			try {
+				this.maze[wall.getZ()][wall.getX() - 1].addEastWall();
+			} catch (Exception e) {}
 	}
 
 	public void raiseWalls(float raiseFor) {
