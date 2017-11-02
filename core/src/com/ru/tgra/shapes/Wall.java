@@ -1,9 +1,6 @@
 package com.ru.tgra.shapes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-
-import java.util.Random;
 
 public class Wall {
 	private float wallWidth, wallLength, wallHeight;

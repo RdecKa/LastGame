@@ -111,6 +111,7 @@ public class Maze {
 
 		// Draw inner star
 		shader.setMaterialDiffuse(this.goalColor);
+		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
 		ModelMatrix.main.loadIdentityMatrix();
 		ModelMatrix.main.addTranslation(this.unit * (this.mazeWidth - 0.5f), this.unit * 0.5f, this.unit * (this.mazeDepth - 0.5f));
 		ModelMatrix.main.addScale(this.goalBoxSize * 0.8f, this.goalBoxSize * 0.8f, this.goalBoxSize * 0.8f);
@@ -122,7 +123,6 @@ public class Maze {
 		ModelGraphics.drawSolidModel();
 
 		// Draw outer, transparent star
-		shader.setMaterialSpecular(new Color(0.8f, 0.8f, 0.8f, 1));
 		shader.setShininess(30);
 		shader.setDiffuseTexture(null);
 		shader.setMaterialEmission(this.goalColor);
@@ -320,13 +320,13 @@ class Cell {
 		this.northWall = true;
 		return new Wall(this.unit * this.wallWidth, this.unit, true,
 				(this.posX + 0.5f) * this.unit, (this.posZ + 1) * this.unit,
-				(rand.nextFloat() < 0.25f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null));
+				(rand.nextFloat() < 0.40f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null));
 	}
 	public Wall addEastWall() {
 		this.eastWall = true;
 		return new Wall(this.unit * this.wallWidth, this.unit, false,
 				(this.posX + 1) * this.unit, (this.posZ + 0.5f) * this.unit,
-				(rand.nextFloat() < 0.25f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null));
+				(rand.nextFloat() < 0.40f ? possibleTextures[rand.nextInt(possibleTextures.length)] : null));
 	}
 
 	// Returns true if wall was added, false otherwise
