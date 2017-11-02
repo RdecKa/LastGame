@@ -1,4 +1,4 @@
-# ThirdGame
+# LastGame
 Assignment #5 for Computer Graphics (Reykjavik University)  
 Karin Frlic, November 2017
 
